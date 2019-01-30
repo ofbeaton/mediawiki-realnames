@@ -226,7 +226,7 @@ class ExtRealnames {
    * @return \string regex namespace options
    * @since 2011-09-22, 0.2
    */              
-  function getNamespacePrefixes() {
+  static function getNamespacePrefixes() {
     global $wgRealnamesNamespaces, $wgContLang, $wgNamespaceAliases;
     
     // if we already figured it all out, just use that again
