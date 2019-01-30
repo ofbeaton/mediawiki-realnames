@@ -9,6 +9,27 @@ email olivier.beaton@gmail.com
 
 any comments, issues, suggestions or complaints.
 
+== 0.3.1 (2011-12-25) ==
+
+bugfix:
+* custom namespace regex (thanks Cweiske)
+* STRICT error with STATIC (thanks Vgold)
+
+notes:
+* removed contrib-agreement, consensus in discussions indicate it's
+ uneeded to remain BSD in shared environment.
+* some progress is being made into core-features for name display, expect
+ some future version to support things like sorting based on realnames (thanks Daniel Friesen)
+* version 0.3 misreported version as 0.2.1, now 0.3.1 (oops, again)
+
+issues:
+* Consensus is that performance could be an issue using current methods. I am currently working
+ on a 2-pass version of the extension to address these issues that will be released as soon as
+ it is ready.
+
+testing:
+* svn trunk 2011-12-26, stable 1.18.0, 1.17.1, 1.16.5, 1.15.5
+
 == 0.3 (2011-11-05) ==
 
 features:

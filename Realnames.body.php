@@ -13,20 +13,15 @@ permitted provided that the following conditions are met:
       of conditions and the following disclaimer in the documentation and/or other materials
       provided with the distribution.
 
-THIS SOFTWARE IS PROVIDED BY <COPYRIGHT HOLDER> ''AS IS'' AND ANY EXPRESS OR IMPLIED
+THIS SOFTWARE IS PROVIDED BY Olivier Finlay Beaton ''AS IS'' AND ANY EXPRESS OR IMPLIED
 WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND
-FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL <COPYRIGHT HOLDER> OR
+FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL Olivier Finlay Beaton OR
 CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
 CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
 SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON
 ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
 NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
 ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-*/
-
-/*
-  By comitting against this file you retain copyright for your contributions and grant
-  them to Olivier Finlay Beaton under the same BSD-2-Clause license (attribution).
 */
 
 /**
@@ -177,6 +172,8 @@ class ExtRealnames {
       // we only do this if both username and realname will be displayed iin
       // the user's format
 
+      wfDebugLog('realnames', __METHOD__.': smart dupe detected');
+
       // we're going to display: John - John
       // this is silly. The smart thing to do
       // is infact nothing (in the name)
@@ -212,7 +209,7 @@ class ExtRealnames {
     }
 
     // always catch this one
-    $namespaces = array('User');
+    $namespaces = array('User:', 'User talk:');
 
     // add in user specified ones
     $namespaces = array_merge($namespaces, array_values($wgRealnamesNamespaces));
@@ -223,12 +220,13 @@ class ExtRealnames {
 
     // user namespace's primary name in the wiki lang
     $namespaces[] = $lang->getNsText ( NS_USER );
+    $namespaces[] = $lang->getNsText ( NS_USER_TALK );
 
     // namespace aliases and gendered namespaces (1.18+) in the wiki's lang
     // fallback for pre 1.16
     $nss = method_exists($lang, 'getNamespaceAliases') ? $lang->getNamespaceAliases() : $wgNamespaceAliases;
     foreach ($nss as $name=>$space) {
-      if ($space == NS_USER) {
+      if (in_array($space, array(NS_USER,NS_USER_TALK))) {
         $namespaces[] = $name;
       }
     }
@@ -236,7 +234,7 @@ class ExtRealnames {
     // clean up
     $namespaces = array_unique($namespaces);
 
-    static::$namespacePrefixes = '(?:'.implode('|',$namespaces).':)';
+    static::$namespacePrefixes = '(?:'.implode('|',$namespaces).')';
 
     wfDebugLog('realnames', __METHOD__.': namespace prefixes: '.static::$namespacePrefixes);
 
@@ -264,10 +262,10 @@ class ExtRealnames {
       wfDebugLog('realnames', __METHOD__.": searching article title...");
 
       // special user page handling
-      if ($title->getNamespace() == NS_USER) { // User:
+      if (in_array($title->getNamespace(), array(NS_USER, NS_USER_TALK))) { // User:
         // swap out the specific username from title
         // this overcomes the problem lookForBare has with spaces and underscores in names
-        $out->setPagetitle(static::lookForBare($out->getPageTitle(),'/'.static::getNamespacePrefixes().'\s*('.$title->getText().')/'));
+        $out->setPagetitle(static::lookForBare($out->getPageTitle(),'/'.static::getNamespacePrefixes().'\s*('.$title->getText().')(?:\/.+)?/'));
       }
 
       // this should also affect the html head title
@@ -333,7 +331,7 @@ class ExtRealnames {
     if (empty($pattern)) {
       // considered doing [^<]+ here to catch names with spaces or underscores,
       // which works for most titles but is not universal
-      $pattern = '/'.static::getNamespacePrefixes().'([^ \t]+)/';
+      $pattern = '/'.static::getNamespacePrefixes().'([^ \t]+)(:\/.+)?/';
     }
     wfDebugLog('realnames', __METHOD__.": pattern: ".$pattern);
     return preg_replace_callback(

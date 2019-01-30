@@ -13,9 +13,9 @@ permitted provided that the following conditions are met:
       of conditions and the following disclaimer in the documentation and/or other materials
       provided with the distribution.
 
-THIS SOFTWARE IS PROVIDED BY <COPYRIGHT HOLDER> ''AS IS'' AND ANY EXPRESS OR IMPLIED
+THIS SOFTWARE IS PROVIDED BY Olivier Finlay Beaton ''AS IS'' AND ANY EXPRESS OR IMPLIED
 WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND
-FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL <COPYRIGHT HOLDER> OR
+FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL Olivier Finlay Beaton OR
 CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
 CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
 SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON
@@ -24,16 +24,11 @@ NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVE
 ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-/*
-  By comitting against this file you retain copyright for your contributions and grant
-  them to Olivier Finlay Beaton under the same BSD-2-Clause license (attribution).
-*/  
-
 /**
  * Extension to display a user's real name wherever and whenever possible.
  * @file
  * @ingroup Extensions
- * @version 0.2.1
+ * @version 0.3.1
  * @authors Olivier Finlay Beaton (olivierbeaton.com)  
  * @copyright BSD-2-Clause http://www.opensource.org/licenses/BSD-2-Clause  
  * @note this extension is pay-what-you-want, please consider a purchase at http://olivierbeaton.com/
@@ -53,7 +48,7 @@ if ( !defined( 'MEDIAWIKI' ) ) {
 $wgExtensionCredits['parserhook'][] = array(
   'name' => 'Realnames',
   'author' =>array('[http://olivierbeaton.com/ Olivier Finlay Beaton]'), 
-  'version' => '0.2.1',
+  'version' => '0.3.1',
   'url' => 'http://www.mediawiki.org/wiki/Extension:Realnames', 
   'description' => 'Displays a user\'s real name everywhere',
  );
