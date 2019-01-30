@@ -36,7 +36,7 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * @copyright BSD-2-Clause http://www.opensource.org/licenses/BSD-2-Clause  
  * @since 2011-09-15, 0.1
  * @note requires MediaWiki 1.7.0
-* @note coding convention followed: http://www.mediawiki.org/wiki/Manual:Coding_conventions 
+ * @note coding convention followed: http://www.mediawiki.org/wiki/Manual:Coding_conventions 
  */
 
 if ( !defined( 'MEDIAWIKI' ) ) {
@@ -48,7 +48,7 @@ if ( !defined( 'MEDIAWIKI' ) ) {
  * @since 2011-09-15, 0.1
  * @note requires MediaWiki 1.7.0
  */ 
-class ExtRealnames {
+class ExtRealnames { 
   /**
    * A cache of realnames for given users
    * @since 2011-09-16, 0.1    
@@ -64,6 +64,11 @@ class ExtRealnames {
    */ 
   protected static $debug = null;
   
+  /**
+   * namespace regex option string
+   * @since 2011-09-16, 0.2
+   */         
+  protected static $namespacePrefixes = false;
   
   /**
    * checks a data set to see if we should proceed with the replacement.
@@ -72,7 +77,7 @@ class ExtRealnames {
    * @since 2011-09-16, 0.1    
    * @see lookForBare() for regex       
    */     
-  public static function checkBare($matches) {
+  protected static function checkBare($matches) {
     // matches come from self::lookForBare()'s regular experession 
     $m = array(
       'all' => $matches[0],
@@ -90,7 +95,7 @@ class ExtRealnames {
     // information is still conveniant and keeps things consistent with checkLink
         
     return self::replace($m);
-  }
+  } // function
   
   
   /**
@@ -100,7 +105,7 @@ class ExtRealnames {
    * @since 2011-09-16, 0.1  
    * @see lookForBare() for regex      
    */
-  public static function checkLink($matches) {
+  protected static function checkLink($matches) {
     // matches come from self::lookForLinks()'s regular experession 
     $m = array(
       'all' => $matches[0],
@@ -125,7 +130,7 @@ class ExtRealnames {
     }
          
     return self::replace($m);
-  }
+  } // function
   
   /**
    * checks if we are printing debug messages
@@ -140,7 +145,7 @@ class ExtRealnames {
       self::$debug = $wgRequest->getBool('rn-debug');
     }
     return self::$debug;
-  }
+  } // function
    
   /**
    * formats the final string in the configured style to display the real name.  
@@ -216,6 +221,54 @@ class ExtRealnames {
   } // function  
    
   /**
+   * gather list of namespace prefixes in the wiki's language.
+   * this is a regex string.
+   * @return \string regex namespace options
+   * @since 2011-09-22, 0.2
+   */              
+  static function getNamespacePrefixes() {
+    global $wgRealnamesNamespaces, $wgContLang, $wgNamespaceAliases;
+    
+    // if we already figured it all out, just use that again
+    if (self::$namespacePrefixes !== false) {
+      return self::$namespacePrefixes;
+    }
+        
+    // always catch this one
+    $namespaces = array('User');
+    
+    // add in user specified ones
+    $namespaces = array_merge($namespaces, array_values($wgRealnamesNamespaces));
+    
+    // try to figure out the wiki language
+    $lang = $wgContLang; 
+    
+    // user namespace's primary name in the wiki lang
+    $namespaces[] = $lang->getNsText ( NS_USER );
+     
+     if (method_exists($lang,'getNameSpaceAliases')) {
+      // namespace aliases and gendered namespaces (1.18+) in the wiki's lang
+      foreach ($lang->getNamespaceAliases() as $name=>$space) {
+        if ($space == NS_USER) {
+          $namespaces[] = $name;
+        }
+      }
+    } else {
+      // try it the hard way... pre 1.16
+      foreach ($wgNamespaceAliases as $name=>$space) {
+        if ($space == NS_USER) {
+          $namespaces[] = $name;
+        }
+      }
+    }
+    
+    // clean up
+    $namespaces = array_unique($namespaces); 
+    
+    self::$namespacePrefixes = '(?:'.implode('|',$namespaces).':)';
+  } // function
+   
+  /**
    * change all usernames to realnames   
    * @param[inout] &$out OutputPage The OutputPage object.
    * @param[inout] &$sk Skin object that will be used to generate the page, added in 1.13.
@@ -224,12 +277,17 @@ class ExtRealnames {
    * @see hook documentation http://www.mediawiki.org/wiki/Manual:Hooks/BeforePageDisplay
    * @note requires MediaWiki 1.7.0      
    */     
-  public static function hookBeforePageDisplay(&$out, &$sk = false) {   
+  public static function hookBeforePageDisplay(&$out, &$sk = false) {
+    global $wgTitle;
+    
+    // pre 1.16 no getTitle()
+    $title = method_exists($out,'getTitle') ? $out->getTitle() : $wgTitle;
+        
     // special user page handling
-    if ($out->getTitle()->getNamespace() == 2) { // User:             
+    if ($title->getNamespace() == NS_USER) { // User:             
       // swap out the specific username from title
       // this overcomes the problem lookForBare has with spaces and underscores in names
-      $out->setPagetitle(self::lookForBare($out->getPageTitle(),'/User:('.$out->getTitle()->getText().')/'));
+      $out->setPagetitle(self::lookForBare($out->getPageTitle(),'/'.self::getNamespacePrefixes().'('.$title->getText().')/'));
     }
        
     // article title
@@ -255,6 +313,31 @@ class ExtRealnames {
   } // function
   
   /**
+   * change all usernames to realnames in url bar  
+   * @param[inout] &$personal_urls \array the array of URLs set up so far
+   * @param[inout] &$title \obj the Title object of the current article
+   * @return \bool true, continue hook processing
+   * @since 2011-09-22, 0.2      
+   * @see hook documentation http://www.mediawiki.org/wiki/Manual:Hooks/PersonalUrls
+   * @note requires MediaWiki 1.7.0 
+   */     
+  public static function hookPersonalUrls(&$personal_urls, &$title) {
+    global $wgUser;
+    
+    // replace the name of the logged in user
+    if (isset($personal_urls['userpage']) && isset($personal_urls['userpage']['text'])) {
+      // fake the match, we know it's there
+      $m = array(
+        'all' => $personal_urls['userpage']['text'],
+        'username' => $personal_urls['userpage']['text'],
+        'realname' => $wgUser->getRealname(),
+      );
+      $personal_urls['userpage']['text'] = self::replace($m);        
+    }
+    return true;  
+  } // function
+  
+  /**
    * scan and replace plain usernames of the form User:username into real names.
    * @param[in] \string text to scan
    * @param[in] \string pattern to match, \bool false for default
@@ -262,11 +345,11 @@ class ExtRealnames {
    * @since 2011-09-16, 0.1
    * @bug we have problems with users with underscores (they become spaces) or spaces, we tend to just strip the User: and leave the username, but we only modify the first word so some weird style might screw it up (2011-09-17, of     
    */     
-  public static function lookForBare($text,$pattern=false) {
+  protected static function lookForBare($text,$pattern=false) {
     if (empty($pattern)) {
       // considered doing [^<]+ here to catch names with spaces or underscores, 
       // which works for most titles but is not universal 
-      $pattern = '/User:([^ \t]+)/'; 
+      $pattern = '/'.self::getNamespacePrefixes().'([^ \t]+)/'; 
     }
     return preg_replace_callback(
       $pattern,
@@ -284,7 +367,7 @@ class ExtRealnames {
    */  
   protected static function lookForLinks($text,$pattern=false) {
     if (empty($pattern)) {
-      $pattern = '/(<a\b[^">]+href="[^">]+User:([^"\\?\\&>]+)[^>]+>)(?:User:)?([^>]+)(<\\/a>)/';
+      $pattern = '/(<a\b[^">]+href="[^">]+'.self::getNamespacePrefixes().'([^"\\?\\&>]+)[^>]+>)'.self::getNamespacePrefixes().'?([^>]+)(<\\/a>)/';
     }  
     return preg_replace_callback(
       $pattern,
@@ -309,19 +392,30 @@ class ExtRealnames {
     }
     
     if (!isset(self::$realnames[$m['username']])) {
-      $user = User::newFromName( $m['username'] );
+      // we don't have it cached
+      $realname = null;
       
-      if (!is_object($user)) {
-        if (self::debug()) {
-          echo "replace: skipped, invalid user: ".$m['username']."<br>\n";          
-        }  
-        return $m['all'];
+      if (isset($m['realname'])) {
+        // we got it elsewhere
+        $realname = $m['realname'];
+      } else {      
+        // time to do a lookup
+        $user = User::newFromName( $m['username'] );
+        
+        if (!is_object($user)) {
+          if (self::debug()) {
+            echo "replace: skipped, invalid user: ".$m['username']."<br>\n";          
+          }  
+          return $m['all'];
+        }
+        
+        $realname = $user->getRealname();
       }
-      
-      self::$realnames[$m['username']] = htmlspecialchars( trim($user->getRealname() ));  
+            
+      self::$realnames[$m['username']] = htmlspecialchars( trim( $realname ));  
     }  
 
-    // this may be blank        
+    // this may be blank      
     $m['realname'] = self::$realnames[$m['username']];
 
     return self::display($m);

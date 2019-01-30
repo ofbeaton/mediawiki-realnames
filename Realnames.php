@@ -33,16 +33,15 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * Extension to display a user's real name wherever and whenever possible.
  * @file
  * @ingroup Extensions
- * @version 0.1.1
+ * @version 0.2
  * @authors Olivier Finlay Beaton (olivierbeaton.com)  
  * @copyright BSD-2-Clause http://www.opensource.org/licenses/BSD-2-Clause  
+ * @note this extension is pay-what-you-want, please consider a purchase at http://olivierbeaton.com/
  * @since 2011-09-15, 0.1
- * @note this extension is pay-what-you-want, please consider a purchase at http://olivierbeaton.com/ 
+ * @note requires MediaWiki 1.7.0   
  * @note coding convention followed: http://www.mediawiki.org/wiki/Manual:Coding_conventions
  */
  
-
-
 if ( !defined( 'MEDIAWIKI' ) ) {
         die( 'This file is a MediaWiki extension, it is not a valid entry point' );
 }
@@ -54,7 +53,7 @@ if ( !defined( 'MEDIAWIKI' ) ) {
 $wgExtensionCredits['parserhook'][] = array(
   'name' => 'Realnames',
   'author' =>array('[http://olivierbeaton.com/ Olivier Finlay Beaton]'), 
-  'version' => '0.1.1',
+  'version' => '0.2',
   'url' => 'http://www.mediawiki.org/wiki/Extension:Realnames', 
   'description' => 'Displays a user\'s real name everywhere',
  );
@@ -99,6 +98,40 @@ $wgRealnamesStyles = array(
     'reverse' => '$1$3$4 [$2]',
     'dash' => '$1$2$4 &ndash; $3',
   ); 
+  
+/**
+ * extra namespaces names to look for.
+ * @note do not include the ':'
+ * @@note this is a regexp so escaping may be required. 
+ * @since 2011-09-22, 0.2
+ */ 
+$wgRealnamesNamespaces = array();
+ 
+if (isset($wgConfigureAdditionalExtensions) && is_array($wgConfigureAdditionalExtensions)) {
+
+  /* (not our var to doc)
+   * attempt to tell Extension:Configure how to web configure our extension
+   * @since 2011-09-22, 0.2 
+   */ 
+  $wgConfigureAdditionalExtensions[] = array(
+      'name' => 'Realnames',
+      'settings' => array(
+          'wgRealnamesLinkStyle' => 'text',
+          'wgRealnamesBareStyle' => 'bool',
+          'wgRealnamesBlank' => 'bool',
+          'wgRealnamesStyles' => 'array',   
+          'wgRealnamesNamespaces' => 'array',     
+      ),
+      'array' => array(
+          'wgRealnamesStyles' => 'assoc',
+          'wgRealnamesNamespaces' => 'simple',
+      ),
+      'schema' => false,
+      'url' => 'http://www.mediawiki.org/wiki/Extension:Realnames',
+  );
+   
+} // $wgConfigureAdditionalExtensions exists
+   
  
 /* (not our var to doc)
  * Our extension class, it will load the first time the core tries to access it
@@ -112,3 +145,10 @@ $wgAutoloadClasses['ExtRealnames'] = dirname(__FILE__) . '/Realnames.body.php';
  * @see $wgAutoloadClasses for how the class gets defined.  
  */
 $wgHooks['BeforePageDisplay'][] = 'ExtRealnames::hookBeforePageDisplay';
+
+/* (not our var to doc)
+ * This hook is called before the user links are displayed.  
+ * @since 2011-09-22, 0.2  
+ * @see $wgAutoloadClasses for how the class gets defined.  
+ */
+$wgHooks['PersonalUrls'][] = 'ExtRealnames::hookPersonalUrls';
