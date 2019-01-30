@@ -9,51 +9,30 @@ email olivier.beaton@gmail.com
 
 any comments, issues, suggestions or complaints.
 
-== 0.2 (2011-09-22) ==
+== 0.3 (2011-11-05) ==
 
 features:
-* replaces username in personnal url bar (where you click login top right vector)
-* allows custom namespace detection $wgRealnamesNamespaces
+* you can opt-out of replacements using $wgRealnamesReplacements (thanks Salquint)
+* we now have smarts in the form of not displaying "Marry - Marry" text
+* you can change "smart" features like above using $wgRealnamesSmart
 
 bugfix:
-* i18n links User: namespaces (thanks Nilsy)
-* support for upcoming 1.18 gendered namespaces
-* title handling for pre 1.16 wiki's
-* custom namespace names
+* version 0.2 misreported version as 0.1.1, now 0.3
+* now tied into main debugging framework
+* a missing return statement was causing titles in append style to get garbled
+
+notes:
+* switched to a more permissive and correct bsd-2-clause license agreement for commits
+* added more metadata files
+
+issues:
+* I continue to be concerned with performance on large recentchanges/history since my initial
+ post about it on 2011-09-19. After receiving a few code reviews recently (finally!) the main
+ feedback has been that there may indeed be scalability problems with using newFromName. In my
+ original post (see extension talk page) I proposed two solutions, but haven't heard from anyone
+ experiencing problems yet. I think I may implement a two-pass as described in the next feature
+ version, however it will make the code significantly more complex. I'll hold off on extending
+ those two specific pages until it's confirmed a two-pass isn't enough.
 
 testing:
-* trunk 2011-09-22 stable 1.17.0, 1.16.0, 1.15.5
-
-== 0.1.1 (2011-09-17) ==
-
-bugfix:
-* eliminated use of create_function due speed implications (thanks Dantman)
-* changed user caching to realname cache for a smaller memory footprint (thanks Dantman)
-* moved debug handling into class and uses $wgRequest, can expand later for 1.18+ (thanks Dantman)
-* license change to BSD, cc is not recommended for software (says them) (thanks Dantman)
-* fixed author link (backported to 0.1, thanks Dantman)
-
-issues:
-* It may be that this extension is slow on RecentChanges and History pages. If so, 
-  I have a solution, but I'd rather not introduce more code if I don't have to. 
-  If you experience noticable slowdowns on these pages please let me know at 
-  olivier dot beaton at gmail dot com 
-
-== 0.1 (2011-09-17) ==
-
-initial tested pages:
-* Special:ListUsers
-* old and new Special:RecentChanges
-* Special:Search of the User: space
-* History of page
-* Revisions list of page
-* Revision view of page
-* Revision Compare
-* Page header + html title (limited)
-* Should integrate into any page where user links are found
-
-issues:
-*Always destructive of User: text, new config in future release?
-*improve bare detection on users with spaces or underscores in names (article titles and html title)
-
-
+* svn trunk 2011-11-05, 1.18.0beta1, 1.17.0, 1.16.5, 1.15.5

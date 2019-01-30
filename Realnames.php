@@ -25,15 +25,15 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
 /*
-  By comitting against this file you agree to assign copyright for your changes
-  to Olivier Finlay Beaton under the same BSD-2-Clause license (attribution). 
-*/ 
+  By comitting against this file you retain copyright for your contributions and grant
+  them to Olivier Finlay Beaton under the same BSD-2-Clause license (attribution).
+*/  
 
 /**
  * Extension to display a user's real name wherever and whenever possible.
  * @file
  * @ingroup Extensions
- * @version 0.2
+ * @version 0.2.1
  * @authors Olivier Finlay Beaton (olivierbeaton.com)  
  * @copyright BSD-2-Clause http://www.opensource.org/licenses/BSD-2-Clause  
  * @note this extension is pay-what-you-want, please consider a purchase at http://olivierbeaton.com/
@@ -53,7 +53,7 @@ if ( !defined( 'MEDIAWIKI' ) ) {
 $wgExtensionCredits['parserhook'][] = array(
   'name' => 'Realnames',
   'author' =>array('[http://olivierbeaton.com/ Olivier Finlay Beaton]'), 
-  'version' => '0.2',
+  'version' => '0.2.1',
   'url' => 'http://www.mediawiki.org/wiki/Extension:Realnames', 
   'description' => 'Displays a user\'s real name everywhere',
  );
@@ -82,6 +82,22 @@ $wgRealnamesBareStyle = false;
 $wgRealnamesBlank = false;
 
 /**
+ * Ability to turn on/off replacement in each area.
+ * This runs a bit counter to the idea of the extension, to simply replace all
+ * names on the page, however baring better names handling sometimes turning off
+ * say (titles) is the only way to go and I don't want people to have to fork/patch
+ * the code to do so.
+ * @attention use of opt-outs here is discouraged.
+ * @since 2011-11-05, 0.1
+ */
+$wgRealnamesReplacements = array(
+    'title' => TRUE,
+    'subtitle' => TRUE,
+    'personnal' => TRUE,
+    'body' => TRUE,
+  );
+
+/**
  * Possible styles to pick from, you can define new ones as well.
  * The following variables are set:<br> 
  * \li $1  link start
@@ -100,9 +116,18 @@ $wgRealnamesStyles = array(
   ); 
   
 /**
+ * Allows you to turn off smart behaviour.
+ * Set the var to FALSE to disable all,
+ * or turn off individual features.
+ */
+$wgRealnamesSmart = array(
+    'same' => TRUE,
+  );
+  
+/**
  * extra namespaces names to look for.
  * @note do not include the ':'
- * @@note this is a regexp so escaping may be required. 
+ * @note this is a regexp so escaping may be required. 
  * @since 2011-09-22, 0.2
  */ 
 $wgRealnamesNamespaces = array();
@@ -120,15 +145,19 @@ if (isset($wgConfigureAdditionalExtensions) && is_array($wgConfigureAdditionalEx
           'wgRealnamesBareStyle' => 'bool',
           'wgRealnamesBlank' => 'bool',
           'wgRealnamesStyles' => 'array',   
+          'wgRealnamesSmart' => 'array',
+          'wgRealnamesReplacements' => 'array',
           'wgRealnamesNamespaces' => 'array',     
-      ),
+        ),
       'array' => array(
           'wgRealnamesStyles' => 'assoc',
+          'wgRealnamesSmart' => 'assoc',
+          'wgRealnamesReplacements' => 'assoc',
           'wgRealnamesNamespaces' => 'simple',
-      ),
+        ),
       'schema' => false,
       'url' => 'http://www.mediawiki.org/wiki/Extension:Realnames',
-  );
+    );
    
 } // $wgConfigureAdditionalExtensions exists
    
