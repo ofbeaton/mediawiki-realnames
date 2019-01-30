@@ -1,10 +1,39 @@
 <?php 
 
+/*
+Copyright 2011 Olivier Finlay Beaton. All rights reserved.
+
+Redistribution and use in source and binary forms, with or without modification, are
+permitted provided that the following conditions are met:
+
+   1. Redistributions of source code must retain the above copyright notice, this list of
+      conditions and the following disclaimer.
+
+   2. Redistributions in binary form must reproduce the above copyright notice, this list
+      of conditions and the following disclaimer in the documentation and/or other materials
+      provided with the distribution.
+
+THIS SOFTWARE IS PROVIDED BY <COPYRIGHT HOLDER> ''AS IS'' AND ANY EXPRESS OR IMPLIED
+WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND
+FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL <COPYRIGHT HOLDER> OR
+CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON
+ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
+ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+*/ 
+
+/*
+  By comitting against this file you agree to assign copyright for your changes
+  to Olivier Finlay Beaton under the same BSD-2-Clause license (attribution). 
+*/
+
 /**
  * @file
  * @ingroup Extensions
  * @authors Olivier Finlay Beaton (olivierbeaton.com) 
- * @copyright cc-by http://creativecommons.org/licenses/by/3.0/  
+ * @copyright BSD-2-Clause http://www.opensource.org/licenses/BSD-2-Clause  
  * @since 2011-09-15, 0.1
  * @note requires MediaWiki 1.7.0
 * @note coding convention followed: http://www.mediawiki.org/wiki/Manual:Coding_conventions 
@@ -21,21 +50,36 @@ if ( !defined( 'MEDIAWIKI' ) ) {
  */ 
 class ExtRealnames {
   /**
-   * A cache of user objects, 
+   * A cache of realnames for given users
+   * @since 2011-09-16, 0.1    
    */     
-  protected static $users = array();
+  // this used to be a cache of User objects as $users
+  protected static $realnames = array();
+  
+  /**
+   * Specify the <em>rc-debug=true</em> key/value pair in your GET parameters 
+   *  to see the debug messages from this extension about the replacements it's doing.
+   *  @note populated on first call to debug(), null until then 
+   *  @since 2011-09-15, 0.1 
+   */ 
+  protected static $debug = null;
+  
   
   /**
    * checks a data set to see if we should proceed with the replacement.
-   * @param[in] $m \array keyed with a string called <em>username</em>   
+   * @param[in] $matches \array keyed with regex matches   
    * @return \string text to replace the match with     
-   * @since 2011-09-16, 0.1  
-   * @note public since it is called from an anonymous function      
+   * @since 2011-09-16, 0.1    
+   * @see lookForBare() for regex       
    */     
-  public static function checkBare($m) {
-    global $wgRealnamesDebug; 
+  public static function checkBare($matches) {
+    // matches come from self::lookForBare()'s regular experession 
+    $m = array(
+      'all' => $matches[0],
+      'username' => $matches[1],
+    );
         
-    if ($wgRealnamesDebug) {
+    if (self::debug()) {
       echo 'checkBare: ';
       var_dump($m);
       echo "<br/>\n";    
@@ -51,19 +95,22 @@ class ExtRealnames {
   
   /**
    * checks a data set to see if we should proceed with the replacement.
-   * @param[in] $m \array keyed with strings called 
-   *    \li<em>linkstart</em>
-   *    \li<em>username</em> 
-   *    \li<em>realname</em>
-   *    \li<em>linkend</em>
+   * @param[in] $matches \array keyed with regex matches 
    * @return \string text to replace the match with                
    * @since 2011-09-16, 0.1  
-   * @note public since it is called from an anonymous function   
+   * @see lookForBare() for regex      
    */
-  public static function checkLink($m) {
-    global $wgRealnamesDebug;
+  public static function checkLink($matches) {
+    // matches come from self::lookForLinks()'s regular experession 
+    $m = array(
+      'all' => $matches[0],
+      'linkstart' => $matches[1],
+      'linkuser' => $matches[2],
+      'username' => $matches[3],
+      'linkend' => $matches[4],
+    );
     
-    if ($wgRealnamesDebug) {
+    if (self::debug()) {
       echo 'checkLink: ';
       var_dump($m);
       echo "<br/>\n";    
@@ -78,6 +125,21 @@ class ExtRealnames {
     }
          
     return self::replace($m);
+  }
+  
+  /**
+   * checks if we are printing debug messages
+   * @return \bool true/false
+   * @since 2011-09-17, 0.1.1
+   * @note sets $debug if set to null based on <em>rn-debug</em> parameter   
+   * @todo use $out->getRequest for 1.18         
+   */     
+  protected static function debug() {
+    global $wgRequest;
+    if (self::$debug === null) {
+      self::$debug = $wgRequest->getBool('rn-debug');
+    }
+    return self::$debug;
   }
    
   /**
@@ -95,8 +157,7 @@ class ExtRealnames {
    * @see $wgRealnamesBlank            
    */ 
   protected static function display($m) {
-    global $wgRealnamesDebug, 
-      $wgRealnamesLinkStyle, $wgRealnamesBareStyle, 
+    global $wgRealnamesLinkStyle, $wgRealnamesBareStyle, 
       $wgRealnamesStyles, $wgRealnamesBlank;
     
     // what kind of formatting will we do?
@@ -111,7 +172,7 @@ class ExtRealnames {
     
     if (empty($style)) {
       // error
-      if ($wgRealnamesDebug) {
+      if (self::debug()) {
         echo 'display: error, blank style configuration<br>\n';          
       }
       return $m['all'];
@@ -122,7 +183,7 @@ class ExtRealnames {
     
     if (empty($style)) {
       // error
-      if ($wgRealnamesDebug) {
+      if (self::debug()) {
         echo 'display: error, blank format configuration<br>\n';          
       }
       return $m['all'];
@@ -145,7 +206,7 @@ class ExtRealnames {
       $m['linkend']
       )); 
     
-    if ($wgRealnamesDebug) {
+    if (self::debug()) {
         echo "display: replacing with \n";
         var_dump($text);  
         echo "<br/>\n";         
@@ -163,9 +224,7 @@ class ExtRealnames {
    * @see hook documentation http://www.mediawiki.org/wiki/Manual:Hooks/BeforePageDisplay
    * @note requires MediaWiki 1.7.0      
    */     
-  public static function hookBeforePageDisplay(&$out, &$sk = false) {
-    global $wgRealnamesDebug;
-    
+  public static function hookBeforePageDisplay(&$out, &$sk = false) {   
     // special user page handling
     if ($out->getTitle()->getNamespace() == 2) { // User:             
       // swap out the specific username from title
@@ -174,20 +233,20 @@ class ExtRealnames {
     }
        
     // article title
-    if ($wgRealnamesDebug) {
+    if (self::debug()) {
       echo "hookBeforePageDisplay: searching article title...<br>\n";          
     }
     // this should also affect the html head title
     $out->setPageTitle(self::lookForBare($out->getPageTitle()));
 
     // subtitle (say, on revision pages)
-    if ($wgRealnamesDebug) {
+    if (self::debug()) {
       echo "hookBeforePageDisplay: searching article subtitle...<br>\n";          
     }
     $out->setSubtitle(self::lookForLinks($out->getSubtitle()));
 
     // article html text
-    if ($wgRealnamesDebug) {
+    if (self::debug()) {
       echo "hookBeforePageDisplay: searching article body...<br>\n";          
     }
     $out->mBodytext = self::lookForLinks($out->getHTML()); 
@@ -211,12 +270,7 @@ class ExtRealnames {
     }
     return preg_replace_callback(
       $pattern,
-      create_function(
-        '$matches',
-        'return ExtRealnames::checkBare(array(  
-          \'all\' => $matches[0],
-          \'username\' => $matches[1],
-          ));'), // can't use self::, it's an anonymous function
+      array( __CLASS__, 'checkBare' ), // create_function is slow
       $text
       );            
   } // function
@@ -234,15 +288,7 @@ class ExtRealnames {
     }  
     return preg_replace_callback(
       $pattern,
-      create_function(
-        '$matches',
-        'return ExtRealnames::checkLink(array(
-          \'all\' => $matches[0],
-          \'linkstart\' => $matches[1],
-          \'linkuser\' => $matches[2],
-          \'username\' => $matches[3],
-          \'linkend\' => $matches[4],
-          ));'), // can't use self::, it's an anonymous function
+      array( __CLASS__, 'checkLink' ), // create_function is slow
       $text
       );
   } // function
@@ -257,30 +303,26 @@ class ExtRealnames {
    * @return \string formatted text to replace the match with                
    * @since 2011-09-16, 0.1  
    */     
-  protected static function replace($m) {  
-    global $wgRealnamesDebug;
-    
-    if ($wgRealnamesDebug) {
+  protected static function replace($m) {    
+    if (self::debug()) {
       echo "replace: matched<br>\n";
     }
     
-    if (empty(self::$users[$m['username']])) {
-      self::$users[$m['username']] = User::newFromName( $m['username'] );  
-    }
-    $user = self::$users[$m['username']]; 
-    if (!is_object($user)) {
-      if ($wgRealnamesDebug) {
-        echo "replace: skipped, invalid user<br>\n";          
-      }  
-      return $m['all'];
-    }
+    if (!isset(self::$realnames[$m['username']])) {
+      $user = User::newFromName( $m['username'] );
+      
+      if (!is_object($user)) {
+        if (self::debug()) {
+          echo "replace: skipped, invalid user: ".$m['username']."<br>\n";          
+        }  
+        return $m['all'];
+      }
+      
+      self::$realnames[$m['username']] = htmlspecialchars( trim($user->getRealname() ));  
+    }  
 
     // this may be blank        
-    $m['realname'] = htmlspecialchars( trim( $user->getRealname() ) );
-    
-    // re-do the name just in case we can get a cleaner version
-    // may not be necesary
-    $m['username'] = htmlspecialchars( trim( $user->getName() ) );
+    $m['realname'] = self::$realnames[$m['username']];
 
     return self::display($m);
   } // function

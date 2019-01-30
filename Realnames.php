@@ -1,16 +1,47 @@
 <?php 
 
+/*
+Copyright 2011 Olivier Finlay Beaton. All rights reserved.
+
+Redistribution and use in source and binary forms, with or without modification, are
+permitted provided that the following conditions are met:
+
+   1. Redistributions of source code must retain the above copyright notice, this list of
+      conditions and the following disclaimer.
+
+   2. Redistributions in binary form must reproduce the above copyright notice, this list
+      of conditions and the following disclaimer in the documentation and/or other materials
+      provided with the distribution.
+
+THIS SOFTWARE IS PROVIDED BY <COPYRIGHT HOLDER> ''AS IS'' AND ANY EXPRESS OR IMPLIED
+WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND
+FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL <COPYRIGHT HOLDER> OR
+CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON
+ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
+ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+*/
+
+/*
+  By comitting against this file you agree to assign copyright for your changes
+  to Olivier Finlay Beaton under the same BSD-2-Clause license (attribution). 
+*/ 
+
 /**
  * Extension to display a user's real name wherever and whenever possible.
  * @file
  * @ingroup Extensions
- * @version 0.1.0
+ * @version 0.1.1
  * @authors Olivier Finlay Beaton (olivierbeaton.com)  
- * @copyright cc-by http://creativecommons.org/licenses/by/3.0/  
+ * @copyright BSD-2-Clause http://www.opensource.org/licenses/BSD-2-Clause  
  * @since 2011-09-15, 0.1
  * @note this extension is pay-what-you-want, please consider a purchase at http://olivierbeaton.com/ 
  * @note coding convention followed: http://www.mediawiki.org/wiki/Manual:Coding_conventions
- */ 
+ */
+ 
+
 
 if ( !defined( 'MEDIAWIKI' ) ) {
         die( 'This file is a MediaWiki extension, it is not a valid entry point' );
@@ -23,7 +54,7 @@ if ( !defined( 'MEDIAWIKI' ) ) {
 $wgExtensionCredits['parserhook'][] = array(
   'name' => 'Realnames',
   'author' =>array('[http://olivierbeaton.com/ Olivier Finlay Beaton]'), 
-  'version' => '0.1.0',
+  'version' => '0.1.1',
   'url' => 'http://www.mediawiki.org/wiki/Extension:Realnames', 
   'description' => 'Displays a user\'s real name everywhere',
  );
@@ -68,13 +99,6 @@ $wgRealnamesStyles = array(
     'reverse' => '$1$3$4 [$2]',
     'dash' => '$1$2$4 &ndash; $3',
   ); 
-  
-/**
- * Specify the <em>rc-debug=true</em> key/value pair in your GET parameters 
- *  to see the debug messages from this extension about the replacements it's doing.
- *  @since 2011-09-15, 0.1 
- */ 
-$wgRealnamesDebug = $_GET['rn-debug']; // $wgRequest doesn't exist yet
  
 /* (not our var to doc)
  * Our extension class, it will load the first time the core tries to access it
