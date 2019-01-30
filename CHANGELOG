@@ -1,0 +1,19 @@
+This is the changelog for the Realnames extension.
+http://www.mediawiki.org/wiki/Extension:Realnames
+
+=0.1 (2011-09-17)=
+
+Initial release Tested pages are:
+Special:ListUsers
+old and new Special:RecentChanges
+Special:Search of the User: space
+History of page
+Revisions list of page
+Revision view of page
+Revision Compare
+Page header + html title (limited)
+Should integrate into any page where user links are found
+
+==Issues==
+Always destructive of User: text, new config in future release?
+improve bare detection on users with spaces or underscores in names (article titles and html title)
