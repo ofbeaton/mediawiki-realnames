@@ -1,7 +1,7 @@
 <?php
 
 /*
-Copyright 2011 Olivier Finlay Beaton. All rights reserved.
+Copyright 2011 Finlay Beaton. All rights reserved.
 
 Redistribution and use in source and binary forms, with or without modification, are
 permitted provided that the following conditions are met:
@@ -13,9 +13,9 @@ permitted provided that the following conditions are met:
       of conditions and the following disclaimer in the documentation and/or other materials
       provided with the distribution.
 
-THIS SOFTWARE IS PROVIDED BY Olivier Finlay Beaton ''AS IS'' AND ANY EXPRESS OR IMPLIED
+THIS SOFTWARE IS PROVIDED BY Finlay Beaton ''AS IS'' AND ANY EXPRESS OR IMPLIED
 WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND
-FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL Olivier Finlay Beaton OR
+FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL Finlay Beaton OR
 CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
 CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
 SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON
@@ -24,31 +24,15 @@ NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVE
 ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-/**
- * @file
- * @ingroup Extensions
- * @authors Olivier Finlay Beaton (olivierbeaton.com)
- * @copyright BSD-2-Clause http://www.opensource.org/licenses/BSD-2-Clause
- * @since 2011-09-15, 0.1
- * @note requires MediaWiki 1.7.0
- * @note coding convention followed: http://www.mediawiki.org/wiki/Manual:Coding_conventions
- */
-
 if ( !defined( 'MEDIAWIKI' ) ) {
         die( 'This file is a MediaWiki extension, it is not a valid entry point' );
 }
 
-/**
- * @ingroup Extensions
- * @since 2011-09-15, 0.1
- * @note requires MediaWiki 1.7.0
- */
 class ExtRealnames {
   /**
    * A cache of realnames for given users
    * @since 2011-09-16, 0.1
    */
-  // this used to be a cache of User objects as $users
   protected static $realnames = array();
 
   /**

@@ -1,7 +1,7 @@
 <?php 
 
 /*
-Copyright 2011 Olivier Finlay Beaton. All rights reserved.
+Copyright 2011 Finlay Beaton. All rights reserved.
 
 Redistribution and use in source and binary forms, with or without modification, are
 permitted provided that the following conditions are met:
@@ -13,9 +13,9 @@ permitted provided that the following conditions are met:
       of conditions and the following disclaimer in the documentation and/or other materials
       provided with the distribution.
 
-THIS SOFTWARE IS PROVIDED BY Olivier Finlay Beaton ''AS IS'' AND ANY EXPRESS OR IMPLIED
+THIS SOFTWARE IS PROVIDED BY Finlay Beaton ''AS IS'' AND ANY EXPRESS OR IMPLIED
 WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND
-FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL Olivier Finlay Beaton OR
+FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL Finlay Beaton OR
 CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
 CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
 SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON
@@ -24,31 +24,14 @@ NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVE
 ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-/**
- * Extension to display a user's real name wherever and whenever possible.
- * @file
- * @ingroup Extensions
- * @version 0.3.1
- * @authors Olivier Finlay Beaton (olivierbeaton.com)  
- * @copyright BSD-2-Clause http://www.opensource.org/licenses/BSD-2-Clause  
- * @note this extension is pay-what-you-want, please consider a purchase at http://olivierbeaton.com/
- * @since 2011-09-15, 0.1
- * @note requires MediaWiki 1.7.0   
- * @note coding convention followed: http://www.mediawiki.org/wiki/Manual:Coding_conventions
- */
- 
 if ( !defined( 'MEDIAWIKI' ) ) {
         die( 'This file is a MediaWiki extension, it is not a valid entry point' );
 }
 
-/* (not our var to doc)
- * extension credits
- * @since 2011-09-16, 0.1
- */
 $wgExtensionCredits['parserhook'][] = array(
   'name' => 'Realnames',
-  'author' =>array('[http://olivierbeaton.com/ Olivier Finlay Beaton]'), 
-  'version' => '0.3.1',
+  'author' =>array('[http://ofbeaton.com/ Finlay Beaton]'), 
+  'version' => '0.3.2',
   'url' => 'http://www.mediawiki.org/wiki/Extension:Realnames', 
   'description' => 'Displays a user\'s real name everywhere',
  );

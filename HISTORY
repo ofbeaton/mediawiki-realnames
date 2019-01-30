@@ -1,13 +1,6 @@
 This is the historical changelog for the Realnames extension.
-This extension is pay-what-you want, please consider purchasing it.
 
-  http://olivierbeaton.com/mediawiki#realnames
-
-I always love hearing from my users,
-
-  email olivier.beaton@gmail.com
-
-any comments, issues, suggestions or complaints.
+  https://www.mediawiki.org/wiki/Extension:Realnames
 
 == 0.2 (2011-09-22) ==
 
@@ -54,5 +47,5 @@ initial tested pages:
 * Should integrate into any page where user links are found
 
 issues:
-*Always destructive of User: text, new config in future release?
-*improve bare detection on users with spaces or underscores in names (article titles and html title)
+* Always destructive of User: text, new config in future release?
+* improve bare detection on users with spaces or underscores in names (article titles and html title)
