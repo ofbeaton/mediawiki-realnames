@@ -2,6 +2,20 @@ This is the historical changelog for the Realnames extension.
 
   https://www.mediawiki.org/wiki/Extension:Realnames
 
+== 0.4.0 (2019-02-03) ==
+
+features:
+* new $wgRealnamesStyles: dash-reverse, paren-append, paren-reverse
+* all $wgRealnamesStyles now include all user text in the link (create custom style to restore previous behaviour)
+* $wgRealnamesLinkStyle now defaults to paren-reverse (was reverse)
+
+bugfix:
+* fix non-english namespace detection missing colon (:) (thanks Koty, 193.190.131.67)
+* fix RecentChanges/AllUsers/etc which added more html to links (thanks Syserr0r)
+
+testing:
+* 1.31.1 (LTS)
+
 == 0.3.2 (2019-01-30) ==
 
 notes:

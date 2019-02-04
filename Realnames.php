@@ -31,7 +31,7 @@ if ( !defined( 'MEDIAWIKI' ) ) {
 $wgExtensionCredits['parserhook'][] = array(
   'name' => 'Realnames',
   'author' =>array('[http://ofbeaton.com/ Finlay Beaton]', '...'), 
-  'version' => '0.4.0',
+  'version' => '0.5.0',
   'url' => 'http://www.mediawiki.org/wiki/Extension:Realnames', 
   'description' => 'Displays a user\'s real name everywhere',
  );
