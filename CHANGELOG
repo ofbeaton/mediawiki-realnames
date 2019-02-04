@@ -2,56 +2,16 @@ This is the changelog for the Realnames extension.
 
 https://www.mediawiki.org/wiki/Extension:Realnames
 
-== 0.3.2 (2019-01-30) ==
-
-notes:
-* documentation update
-
-== 0.3.1 (2011-12-25) ==
-
-bugfix:
-* custom namespace regex (thanks Cweiske)
-* STRICT error with STATIC (thanks Vgold)
-
-notes:
-* removed contrib-agreement, consensus in discussions indicate it's
- uneeded to remain BSD in shared environment.
-* some progress is being made into core-features for name display, expect
- some future version to support things like sorting based on realnames (thanks Daniel Friesen)
-* version 0.3 misreported version as 0.2.1, now 0.3.1 (oops, again)
-
-issues:
-* Consensus is that performance could be an issue using current methods. I am currently working
- on a 2-pass version of the extension to address these issues that will be released as soon as
- it is ready.
-
-testing:
-* svn trunk 2011-12-26, stable 1.18.0, 1.17.1, 1.16.5, 1.15.5
-
-== 0.3 (2011-11-05) ==
+== 0.4.0 (2019-02-03) ==
 
 features:
-* you can opt-out of replacements using $wgRealnamesReplacements (thanks Salquint)
-* we now have smarts in the form of not displaying "Marry - Marry" text
-* you can change "smart" features like above using $wgRealnamesSmart
+* new $wgRealnamesStyles: dash-reverse, paren-append, paren-reverse
+* all $wgRealnamesStyles now include all user text in the link (create custom style to restore previous behaviour)
+* $wgRealnamesLinkStyle now defaults to paren-reverse (was reverse)
 
 bugfix:
-* version 0.2 misreported version as 0.1.1, now 0.3
-* now tied into main debugging framework
-* a missing return statement was causing titles in append style to get garbled
-
-notes:
-* switched to a more permissive and correct bsd-2-clause license agreement for commits
-* added more metadata files
-
-issues:
-* I continue to be concerned with performance on large recentchanges/history since my initial
- post about it on 2011-09-19. After receiving a few code reviews recently (finally!) the main
- feedback has been that there may indeed be scalability problems with using newFromName. In my
- original post (see extension talk page) I proposed two solutions, but haven't heard from anyone
- experiencing problems yet. I think I may implement a two-pass as described in the next feature
- version, however it will make the code significantly more complex. I'll hold off on extending
- those two specific pages until it's confirmed a two-pass isn't enough.
+* fix non-english namespace detection missing colon (:) (thanks Koty, 193.190.131.67)
+* fix RecentChanges/AllUsers/etc which added more html to links (thanks Syserr0r)
 
 testing:
-* svn trunk 2011-11-05, 1.18.0beta1, 1.17.0, 1.16.5, 1.15.5
+* 1.31.1 (LTS)

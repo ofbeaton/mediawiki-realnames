@@ -1,7 +1,7 @@
 <?php
 
 /*
-Copyright 2011 Finlay Beaton. All rights reserved.
+Copyright 2011-2019 Finlay Beaton. All rights reserved.
 
 Redistribution and use in source and binary forms, with or without modification, are
 permitted provided that the following conditions are met:
@@ -193,7 +193,7 @@ class ExtRealnames {
     }
 
     // always catch this one
-    $namespaces = array('User:', 'User talk:');
+    $namespaces = array('User', 'User_talk', 'User talk');
 
     // add in user specified ones
     $namespaces = array_merge($namespaces, array_values($wgRealnamesNamespaces));
@@ -218,7 +218,7 @@ class ExtRealnames {
     // clean up
     $namespaces = array_unique($namespaces);
 
-    static::$namespacePrefixes = '(?:'.implode('|',$namespaces).')';
+    static::$namespacePrefixes = '(?:(?:'.implode('|',$namespaces).'):)';
 
     wfDebugLog('realnames', __METHOD__.': namespace prefixes: '.static::$namespacePrefixes);
 
@@ -280,7 +280,7 @@ class ExtRealnames {
    * @see hook documentation http://www.mediawiki.org/wiki/Manual:Hooks/PersonalUrls
    * @note requires MediaWiki 1.7.0
    */
-  public static function hookPersonalUrls(&$personal_urls, &$title) {
+  public static function hookPersonalUrls(&$personal_urls, $title) {
     global $wgUser, $wgRealnamesReplacements;
 
     if ($wgRealnamesReplacements['personnal'] === TRUE) {
@@ -297,7 +297,7 @@ class ExtRealnames {
         $personal_urls['userpage']['text'] = static::replace($m);
       }
     } // opt out
-
+    
     return true;
   } // function
 
@@ -315,7 +315,7 @@ class ExtRealnames {
     if (empty($pattern)) {
       // considered doing [^<]+ here to catch names with spaces or underscores,
       // which works for most titles but is not universal
-      $pattern = '/'.static::getNamespacePrefixes().'([^ \t]+)(:\/.+)?/';
+      $pattern = '/'.static::getNamespacePrefixes().'([^ \t]+)(\/.+)?/';
     }
     wfDebugLog('realnames', __METHOD__.": pattern: ".$pattern);
     return preg_replace_callback(
@@ -334,7 +334,7 @@ class ExtRealnames {
    */
   protected static function lookForLinks($text,$pattern=false) {
     if (empty($pattern)) {
-      $pattern = '/(<a\b[^">]+href="[^">]+'.static::getNamespacePrefixes().'([^"\\?\\&>]+)[^>]+>)'.static::getNamespacePrefixes().'?([^>]+)(<\\/a>)/';
+      $pattern = '/(<a\b[^">]+href="[^">]+'.static::getNamespacePrefixes().'([^"\\?\\&>]+)[^>]+>(?:<bdi>)?)'.static::getNamespacePrefixes().'?([^>]+)((?:<\\/bdi>)?<\\/a>)/';
     }
     return preg_replace_callback(
       $pattern,
@@ -354,7 +354,7 @@ class ExtRealnames {
    * @since 2011-09-16, 0.1
    */
   protected static function replace($m) {
-    wfDebugLog('realnames', __METHOD__.": matched");
+    wfDebugLog('realnames', __METHOD__.": matched ".(isset($m['username']) ? $m['username'] : print_r($m,true)));
 
     if (!isset(static::$realnames[$m['username']])) {
       // we don't have it cached

@@ -1,7 +1,7 @@
 <?php 
 
 /*
-Copyright 2011 Finlay Beaton. All rights reserved.
+Copyright 2011-2019 Finlay Beaton. All rights reserved.
 
 Redistribution and use in source and binary forms, with or without modification, are
 permitted provided that the following conditions are met:
@@ -30,8 +30,8 @@ if ( !defined( 'MEDIAWIKI' ) ) {
 
 $wgExtensionCredits['parserhook'][] = array(
   'name' => 'Realnames',
-  'author' =>array('[http://ofbeaton.com/ Finlay Beaton]'), 
-  'version' => '0.3.2',
+  'author' =>array('[http://ofbeaton.com/ Finlay Beaton]', '...'), 
+  'version' => '0.4.0',
   'url' => 'http://www.mediawiki.org/wiki/Extension:Realnames', 
   'description' => 'Displays a user\'s real name everywhere',
  );
@@ -41,7 +41,7 @@ $wgExtensionCredits['parserhook'][] = array(
  * @since 2011-09-15, 0.1
  * @see $wgRealnamesFormats 
  */ 
-$wgRealnamesLinkStyle = 'replace';
+$wgRealnamesLinkStyle = 'paren-reverse';
 
 /**
  * The format to apply to a user's name in text. 
@@ -87,10 +87,13 @@ $wgRealnamesReplacements = array(
  */
 $wgRealnamesStyles = array( 
     'standard' => '$1$2$4',
-    'append' => '$1$2$4 [$3]',
+    'append' => '$1$2 [$3]$4',
     'replace' => '$1$3$4',
-    'reverse' => '$1$3$4 [$2]',
-    'dash' => '$1$2$4 &ndash; $3',
+    'reverse' => '$1$3 [$2]$4',
+    'dash' => '$1$2 &ndash; $3$4',
+    'dash-reverse' => '$1$3$4 &ndash; $2',    
+    'paren-append' => '$1$2 ($3)$4',
+    'paren-reverse' => '$1$3 ($2)$4', 
   ); 
   
 /**
@@ -149,7 +152,8 @@ $wgAutoloadClasses['ExtRealnames'] = dirname(__FILE__) . '/Realnames.body.php';
 /* (not our var to doc)
  * This hook is called before the article is displayed.  
  * @since 2011-09-16, 0.1  
- * @see $wgAutoloadClasses for how the class gets defined.  
+ * @see $wgAutoloadClasses for how the class gets defined.
+ * @note OutputPageBeforeHTML does not work for Special pages like RecentChanges or ActiveUsers   
  */
 $wgHooks['BeforePageDisplay'][] = 'ExtRealnames::hookBeforePageDisplay';
 
