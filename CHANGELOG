@@ -2,6 +2,11 @@ This is the changelog for the Realnames extension.
 
 https://www.mediawiki.org/wiki/Extension:Realnames
 
+== 0.6.0 (???) ==
+
+breaking:
+* removed support for now-archived Extension:Configure
+
 == 0.5.1 (2019-02-04) ==
 
 bugfix:

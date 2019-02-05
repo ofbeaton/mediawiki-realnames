@@ -31,7 +31,7 @@ if ( !defined( 'MEDIAWIKI' ) ) {
 $wgExtensionCredits['parserhook'][] = array(
   'name' => 'Realnames',
   'author' =>array('[http://ofbeaton.com/ Finlay Beaton]', '...'), 
-  'version' => '0.5.1',
+  'version' => '0.6.0',
   'url' => 'http://www.mediawiki.org/wiki/Extension:Realnames', 
   'description' => 'Displays a user\'s real name everywhere',
  );
@@ -111,37 +111,7 @@ $wgRealnamesSmart = array(
  * @note this is a regexp so escaping may be required. 
  * @since 2011-09-22, 0.2
  */ 
-$wgRealnamesNamespaces = array();
- 
-if (isset($wgConfigureAdditionalExtensions) && is_array($wgConfigureAdditionalExtensions)) {
-
-  /* (not our var to doc)
-   * attempt to tell Extension:Configure how to web configure our extension
-   * @since 2011-09-22, 0.2 
-   */ 
-  $wgConfigureAdditionalExtensions[] = array(
-      'name' => 'Realnames',
-      'settings' => array(
-          'wgRealnamesLinkStyle' => 'text',
-          'wgRealnamesBareStyle' => 'bool',
-          'wgRealnamesBlank' => 'bool',
-          'wgRealnamesStyles' => 'array',   
-          'wgRealnamesSmart' => 'array',
-          'wgRealnamesReplacements' => 'array',
-          'wgRealnamesNamespaces' => 'array',     
-        ),
-      'array' => array(
-          'wgRealnamesStyles' => 'assoc',
-          'wgRealnamesSmart' => 'assoc',
-          'wgRealnamesReplacements' => 'assoc',
-          'wgRealnamesNamespaces' => 'simple',
-        ),
-      'schema' => false,
-      'url' => 'http://www.mediawiki.org/wiki/Extension:Realnames',
-    );
-   
-} // $wgConfigureAdditionalExtensions exists
-   
+$wgRealnamesNamespaces = array(); 
  
 /* (not our var to doc)
  * Our extension class, it will load the first time the core tries to access it
