@@ -44,7 +44,7 @@ include_once("$IP/extensions/Realnames/Realnames.php");
 ```
 
 ### Configuration parameters
-#### $wgRealnamesLinkStyle
+#### $wgRealnamesLinkStyle [>=0.1]
 Values | Example | Description
 ------ | ------- | -----------
 "standard" | [mw305](User:mw305) | Provided for convenience, this is the default MediaWiki behavior
@@ -56,10 +56,10 @@ Values | Example | Description
 "paren-append" | [mw305 (Martha Stewart)](User:mw305)
 "paren-reverse" | [Martha Stewart (mw305)](User:mw305) | Default extension behaviour
 
-#### $wgRealnamesBareStyle
+#### $wgRealnamesBareStyle [>=0.1]
 Values | Example | Description
 ------ | ------- | -----------
-false | N/A | Uses same style name as $wgRealnamesLinkStyle
+false | N/A | Uses same style name as $wgRealnamesLinkStyle<br>Default extension behaviour
 "standard" | mw305 | Provided for convenience, this is the standard MediaWiki behavior
 "replace" | Martha Stewart
 "append" | mw305 \[Martha Stewart\]
@@ -67,9 +67,9 @@ false | N/A | Uses same style name as $wgRealnamesLinkStyle
 "dash" | mw305 &ndash; Martha Stewart
 "dash-reverse" | Martha Stewart &ndash; mw305
 "paren-append" | mw305 (Martha Stewart)
-"paren-reverse" | Martha Stewart (mw305) | Default extension behaviour
+"paren-reverse" | Martha Stewart (mw305)
 
-#### $wgRealnamesBlank
+#### $wgRealnamesBlank [>=0.1]
 Do you want to show blank real names? This can make sense for _append_ style but looks silly in _reverse_. The default _false_ which shows a _standard_ link instead.
 
 Values:
@@ -80,7 +80,7 @@ Output:
 * mw305 []
 * mw305
 
-#### $wgRealnamesStyles
+#### $wgRealnamesStyles [>=0.1]
 Allows for the custom creation of style types that can then be assigned for ''link'' and ''bare'' styles. Usually to add custom text. You get 4 variables in your style:<br>
 * `$1` link start<br>
 * `$2`  username<br>
@@ -96,7 +96,9 @@ Example:
 
 `$wgRealnamesStyles['mystyle'] = '&lt;span class="custom"&gt;$1$3$4&lt;/span&gt;';`
 
-#### $wgRealnamesReplacements
+> Note: HTML does not work in Bare style.
+
+#### $wgRealnamesReplacements [>=0.1]
 Allows you to turn off replacement in specific sections.
 
 Value:
@@ -112,7 +114,7 @@ $wgRealnamesReplacements['personnal'] = TRUE;
 $wgRealnamesReplacements['body'] = TRUE;
 ```
 
-#### $wgRealnamesSmart
+#### $wgRealnamesSmart [>=0.3]
 Allows you to turn off specific smart features
 
 Value:
@@ -125,7 +127,7 @@ Key | Description
 --- | ---
 `$wgRealnamesSmart['same'] = TRUE;` | same &mdash; does not replace if username=realname
 
-#### $wgRealnamesNamespaces
+#### $wgRealnamesNamespaces [>=0.2]
 Allows you to add more namespaces for it to search for. Use this only if the article name is the username in a given namespace. Do not include the :, and keep it mind this is a regular expression string, you can use regexp modifiers, but as well may need to escape some characters.
 
 Value:
@@ -138,7 +140,7 @@ Example:
 $wgRealnamesNamespaces[] = 'CustomUserBasedNamespace';
 ```
 ### Testing
-* MediaWiki 1.31.1 (LTS), 1.18.0, 1.17.1, 1.16.5, 1.15.5,
+* MediaWiki 1.32.0, 1.31.1 (LTS), 1.18.0, 1.17.1, 1.16.5, 1.15.5,
 
 ## See also
 * [Extension:LDAP_Authentication](https://www.mediawiki.org/wiki/Extension:LDAP_Authentication) popular import username/realnames from LDAP/AD

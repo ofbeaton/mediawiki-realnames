@@ -28,26 +28,11 @@ if ( !defined( 'MEDIAWIKI' ) ) {
         die( 'This file is a MediaWiki extension, it is not a valid entry point' );
 }
 
+/** >= 0.1 */
 class ExtRealnames {
-  /**
-   * A cache of realnames for given users
-   * @since 2011-09-16, 0.1
-   */
   protected static $realnames = array();
-
-  /**
-   * namespace regex option string
-   * @since 2011-09-16, 0.2
-   */
   protected static $namespacePrefixes = false;
 
-  /**
-   * checks a data set to see if we should proceed with the replacement.
-   * @param[in] $matches \array keyed with regex matches
-   * @return \string text to replace the match with
-   * @since 2011-09-16, 0.1
-   * @see lookForBare() for regex
-   */
   protected static function checkBare($matches) {
     // matches come from static::lookForBare()'s regular experession
     $m = array(
@@ -55,7 +40,7 @@ class ExtRealnames {
       'username' => $matches[1],
     );
 
-    wfDebugLog('realnames', __METHOD__.': '.print_r($m,true));
+    static::debug(__METHOD__, print_r($m,true));
 
     // we do not currently do any checks on Bare replacements, a User: find is
     // always valid but we could add one in the future, and the debug
@@ -65,13 +50,6 @@ class ExtRealnames {
   } // function
 
 
-  /**
-   * checks a data set to see if we should proceed with the replacement.
-   * @param[in] $matches \array keyed with regex matches
-   * @return \string text to replace the match with
-   * @since 2011-09-16, 0.1
-   * @see lookForBare() for regex
-   */
   protected static function checkLink($matches) {
     // matches come from static::lookForLinks()'s regular experession
     $m = array(
@@ -82,7 +60,7 @@ class ExtRealnames {
       'linkend' => $matches[4],
     );
 
-    wfDebugLog('realnames', __METHOD__.': '.print_r($m,true));
+    static::debug(__METHOD__, print_r($m,true));
 
     // some links point to user pages but do not display the username, we can safely ignore those
     // we need to urldecode the link for accents and special characters,
@@ -95,20 +73,10 @@ class ExtRealnames {
     return static::replace($m);
   } // function
 
-  /**
-   * formats the final string in the configured style to display the real name.
-   * @param[in] $m \array keyed with strings called
-   *    \li<em>linkstart</em>
-   *    \li<em>username</em>
-   *    \li<em>realname</em>
-   *    \li<em>linkend</em>
-   * @return \string formatted text to replace the match with
-   * @since 2011-09-16, 0.1
-   * @see $wgRealnamesLinkStyle
-   * @see $wgRealnamesBareStyle
-   * @see $wgRealnamesStyles
-   * @see $wgRealnamesBlank
-   */
+  protected static function debug($method, $text) {
+    wfDebugLog('realnames', $method.': '.$text);  
+  }
+
   protected static function display($m) {
     global $wgRealnamesLinkStyle, $wgRealnamesBareStyle,
       $wgRealnamesStyles, $wgRealnamesBlank, $wgRealnamesSmart;
@@ -125,7 +93,7 @@ class ExtRealnames {
 
     if (empty($style)) {
       // error
-      wfDebugLog('realnames', __METHOD__.': error, blank style configuration');
+      static::debug(__METHOD__, 'error, blank style configuration');
       return $m['all'];
     }
 
@@ -134,7 +102,7 @@ class ExtRealnames {
 
     if (empty($style)) {
       // error
-      wfDebugLog('realnames', __METHOD__.': error, blank format configuration');
+      static::debug(__METHOD__, 'error, blank format configuration');
       return $m['all'];
     }
 
@@ -156,7 +124,7 @@ class ExtRealnames {
       // we only do this if both username and realname will be displayed iin
       // the user's format
 
-      wfDebugLog('realnames', __METHOD__.': smart dupe detected');
+      static::debug(__METHOD__, 'smart dupe detected');
 
       // we're going to display: John - John
       // this is silly. The smart thing to do
@@ -173,17 +141,11 @@ class ExtRealnames {
       $m['linkend']
       ));
 
-    wfDebugLog('realnames', __METHOD__.': replacing with '.print_r($text,true));
+      static::debug(__METHOD__, 'replacing with '.print_r($text,true));
 
     return $text;
   } // function
 
-  /**
-   * gather list of namespace prefixes in the wiki's language.
-   * this is a regex string.
-   * @return \string regex namespace options
-   * @since 2011-09-22, 0.2
-   */
   public static function getNamespacePrefixes() {
     global $wgRealnamesNamespaces, $wgContLang, $wgNamespaceAliases;
 
@@ -220,22 +182,20 @@ class ExtRealnames {
 
     static::$namespacePrefixes = '(?:(?:'.implode('|',$namespaces).'):)';
 
-    wfDebugLog('realnames', __METHOD__.': namespace prefixes: '.static::$namespacePrefixes);
+    static::debug(__METHOD__, 'namespace prefixes: '.static::$namespacePrefixes);
 
     // how did I forget this line before?
     return static::$namespacePrefixes;
   } // function
 
   /**
-   * change all usernames to realnames
-   * @param[inout] &$out OutputPage The OutputPage object.
-   * @param[inout] &$sk Skin object that will be used to generate the page, added in 1.13.
+   * >= 0.1
+   * @note OutputPageBeforeHTML does not work for Special pages like RecentChanges or ActiveUsers   
    * @return \bool true, continue hook processing
-   * @since 2011-09-16, 0.1
    * @see hook documentation http://www.mediawiki.org/wiki/Manual:Hooks/BeforePageDisplay
    * @note requires MediaWiki 1.7.0
    */
-  public static function hookBeforePageDisplay(&$out, &$sk = false) {
+  public static function hookBeforePageDisplay(&$out, &$skin = false) {
     global $wgTitle, $wgRealnamesReplacements;
 
     // pre 1.16 no getTitle()
@@ -243,7 +203,7 @@ class ExtRealnames {
 
     if ($wgRealnamesReplacements['title'] === TRUE) {
       // article title
-      wfDebugLog('realnames', __METHOD__.": searching article title...");
+      static::debug(__METHOD__, "searching article title...");
 
       // special user page handling
       if (in_array($title->getNamespace(), array(NS_USER, NS_USER_TALK))) { // User:
@@ -258,33 +218,31 @@ class ExtRealnames {
 
     if ($wgRealnamesReplacements['subtitle'] === TRUE) {
       // subtitle (say, on revision pages)
-      wfDebugLog('realnames', __METHOD__.": searching article subtitle...");
+      static::debug(__METHOD__, "searching article subtitle...");
       $out->setSubtitle(static::lookForLinks($out->getSubtitle()));
     } // opt-out
 
     if ($wgRealnamesReplacements['body'] === TRUE) {
       // article html text
-      wfDebugLog('realnames', __METHOD__.": searching article body...");
+      static::debug(__METHOD__, "searching article body...");
       $out->mBodytext = static::lookForLinks($out->getHTML());
     } // opt-out
 
     return true;
   } // function
 
-  /**
-   * change all usernames to realnames in url bar
-   * @param[inout] &$personal_urls \array the array of URLs set up so far
-   * @param[inout] &$title \obj the Title object of the current article
+  /** >= 0.2
+   * change all usernames to realnames in skin top right links bar
    * @return \bool true, continue hook processing
-   * @since 2011-09-22, 0.2
    * @see hook documentation http://www.mediawiki.org/wiki/Manual:Hooks/PersonalUrls
    * @note requires MediaWiki 1.7.0
+   * @note does nothing for Timeless skin
    */
   public static function hookPersonalUrls(&$personal_urls, $title) {
     global $wgUser, $wgRealnamesReplacements;
 
     if ($wgRealnamesReplacements['personnal'] === TRUE) {
-      wfDebugLog('realnames', __METHOD__.": searching personnal urls...");
+      static::debug(__METHOD__, "searching personnal urls...");
 
       // replace the name of the logged in user
       if (isset($personal_urls['userpage']) && isset($personal_urls['userpage']['text'])) {
@@ -302,11 +260,6 @@ class ExtRealnames {
   } // function
 
   /**
-   * scan and replace plain usernames of the form User:username into real names.
-   * @param[in] \string text to scan
-   * @param[in] \string pattern to match, \bool false for default
-   * @return \string with realnames replaced in
-   * @since 2011-09-16, 0.1
    * @bug we have problems with users with underscores (they become spaces) or spaces,
    *    we tend to just strip the User: and leave the username, but we only modify the
    *    first word so some weird style might screw it up (2011-09-17, ofb)
@@ -317,7 +270,7 @@ class ExtRealnames {
       // which works for most titles but is not universal
       $pattern = '/'.static::getNamespacePrefixes().'([^ \t]+)(\/.+)?/';
     }
-    wfDebugLog('realnames', __METHOD__.": pattern: ".$pattern);
+    static::debug(__METHOD__, "pattern: ".$pattern);
     return preg_replace_callback(
       $pattern,
       array( __CLASS__, 'checkBare' ), // create_function is slow
@@ -325,13 +278,6 @@ class ExtRealnames {
       );
   } // function
 
-  /**
-   * scan and replace username links into realname links
-   * @param[in] \string text to scan
-   * @param[in] \string pattern to match, \bool false for default
-   * @return \string with realnames replaced in
-   * @since 2011-09-16, 0.1
-   */
   protected static function lookForLinks($text,$pattern=false) {
     if (empty($pattern)) {
       $pattern = '/(<a\b[^">]+href="[^">]+'.static::getNamespacePrefixes().'([^"\\?\\&>]+)[^>]+>(?:<bdi>)?)'.static::getNamespacePrefixes().'?([^>]+)((?:<\\/bdi>)?<\\/a>)/';
@@ -343,18 +289,8 @@ class ExtRealnames {
       );
   } // function
 
-  /**
-   * obtains user information based on a match for future replacement
-   * @param[in] $m \array keyed with strings called
-   *    \li<em>linkstart</em> (optional)
-   *    \li<em>username</em>
-   *    \li<em>realname</em> (optional)
-   *    \li<em>linkend</em> (optional)
-   * @return \string formatted text to replace the match with
-   * @since 2011-09-16, 0.1
-   */
   protected static function replace($m) {
-    wfDebugLog('realnames', __METHOD__.": matched ".(isset($m['username']) ? $m['username'] : print_r($m,true)));
+    static::debug(__METHOD__, "matched ".(isset($m['username']) ? $m['username'] : print_r($m,true)));
 
     if (!isset(static::$realnames[$m['username']])) {
       // we don't have it cached
@@ -368,7 +304,7 @@ class ExtRealnames {
         $user = User::newFromName( $m['username'] );
 
         if (!is_object($user)) {
-          wfDebugLog('realnames', __METHOD__.": skipped, invalid user: ".$m['username']);
+          static::debug(__METHOD__, "skipped, invalid user: ".$m['username']);
           return $m['all'];
         }
 
