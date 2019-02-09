@@ -86,7 +86,7 @@ The style to use on links when realname is blank, as long as `$wgRealnamesBlank 
 Same value options as described for `$wgRealnamesLinkStyle`.
 
 #### $wgRealnamesBareStyleBlankName [>0.6]
-The style to use on text when username=realname, as long as `$wgRealnamesBlank === FALSE`. Default is `standard`. 
+The style to use on text when username=realname, as long as `$wgRealnamesBlank === FALSE`. Default is `false` which shows `standard`. 
 
 Same value options as described for `$wgRealnamesBareStyle`.
 
@@ -143,7 +143,7 @@ The style to use on links when username=realname, as long as `$wgRealnamesSmart[
 Same value options as described for `$wgRealnamesLinkStyle`.
 
 #### $wgRealnamesBareStyleSameName [>0.6]
-The style to use on text when username=realname, as long as `$wgRealnamesSmart['same'] === TRUE`. Default is `standard`. 
+The style to use on text when username=realname, as long as `$wgRealnamesSmart['same'] === TRUE`. Default is `false` which shows `standard`. 
 
 Same value options as described for `$wgRealnamesBareStyle`.
 
