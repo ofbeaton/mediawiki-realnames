@@ -3,6 +3,8 @@ This is the changelog for the Realnames extension.
 https://www.mediawiki.org/wiki/Extension:Realnames
 
 == 0.6.0 (2019-02-09) ==
+**FEEDBACK NEEDED TO KEEP CONFIGS, SEE NOTE**
+
 features:
 * to keep custom styles, new configuration settings for two error states had to be added
 * When user has no realname: $wgRealnamesLinkStyleNoRealname, $wgRealnamesBareStyleNoRealname
