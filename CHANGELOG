@@ -2,6 +2,12 @@ This is the changelog for the Realnames extension.
 
 https://www.mediawiki.org/wiki/Extension:Realnames
 
+== 0.6.1 (2019-02-09) ==
+**FEEDBACK NEEDED TO KEEP CONFIGS, SEE NOTE FOR 0.6.0 **
+
+bugfix:
+* incremented version display
+
 == 0.6.0 (2019-02-09) ==
 **FEEDBACK NEEDED TO KEEP CONFIGS, SEE NOTE**
 
