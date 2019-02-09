@@ -79,13 +79,23 @@ class ExtRealnames {
 
   protected static function display($m) {
     global $wgRealnamesLinkStyle, $wgRealnamesBareStyle,
-      $wgRealnamesStyles, $wgRealnamesBlank, $wgRealnamesSmart;
+      $wgRealnamesStyles, $wgRealnamesBlank, $wgRealnamesSmart,
+      $wgRealnamesLinkStyleBlankName, $wgRealnamesBareStyleBlankName,
+      $wgRealnamesLinkStyleSameName, $wgRealnamesBareStyleSameName;
 
     // what kind of formatting will we do?
     $style = $wgRealnamesLinkStyle;
+    $styleBlankName = $wgRealnamesLinkStyleBlankName;
+    $styleSameName = $wgRealnamesLinkStyleSameName;
     if (empty($m['linkstart'])) {
       if ($wgRealnamesBareStyle !== false) {
         $style = $wgRealnamesBareStyle;
+      }
+      if ($wgRealnamesBareStyleBlankName !== false) {
+        $styleBlankName = $wgRealnamesBareStyleBlankName;  
+      }
+      if ($wgRealnamesBareStyleSameName !== false) {
+        $styleSameName = $wgRealnamesBareStyleSameName;  
       }
       $m['linkstart'] = '';
       $m['linkend'] = '';
@@ -106,13 +116,12 @@ class ExtRealnames {
       return $m['all'];
     }
 
-    // we have a blank username, and the admin doesn't want to see them,
+    // we have a blank realname, and the admin doesn't want to see them,
     // or his chosen format will not display a username at all
     if (empty($m['realname']) && (
       !$wgRealnamesBlank || strpos($format,'$2') === false
       )) {
-      // swap in the username where they expected the realname
-      $format = str_replace('$3','$2',$format);
+        $format = $wgRealnamesStyles[$styleBlankName];
     }
 
     if ($wgRealnamesSmart !== FALSE
@@ -121,7 +130,7 @@ class ExtRealnames {
         && strpos($format, '$2') !== FALSE
         && strpos($format, '$3') !== FALSE
       ) {
-      // we only do this if both username and realname will be displayed iin
+      // we only do this if both username and realname will be displayed in
       // the user's format
 
       static::debug(__METHOD__, 'smart dupe detected');
@@ -129,7 +138,7 @@ class ExtRealnames {
       // we're going to display: John - John
       // this is silly. The smart thing to do
       // is infact nothing (in the name)
-      $format = $wgRealnamesStyles['standard'];
+      $format = $wgRealnamesStyles[$styleSameName];
 
     }
 

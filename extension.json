@@ -8,7 +8,11 @@
    "license-name": "BSD-2-Clause",
    "config": {
       "RealnamesLinkStyle": "paren-reverse",
+      "RealnamesLinkStyleBlankName": "standard",
+      "RealnamesLinkStyleSameName": "standard",
       "RealnamesBareStyle": false,
+      "RealnamesBareStyleBlankName": false,
+      "RealnamesBareStyleSameName": false,
       "RealnamesBlank": false,
       "RealnamesReplacements": {
          "title": true,

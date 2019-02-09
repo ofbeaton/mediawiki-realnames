@@ -39,7 +39,11 @@ $wgExtensionCredits['parserhook'][] = array(
 
 /** Extension default configuration, docs in README.md, overwrite in LocalSettings.php */
 $wgRealnamesLinkStyle = 'paren-reverse';
+$wgRealnamesLinkStyleBlankName = 'standard';
+$wgRealnamesLinkStyleSameName = 'standard';
 $wgRealnamesBareStyle = false;
+$wgRealnamesBareStyleBlankName = false;
+$wgRealnamesBareStyleSameName = false;
 $wgRealnamesBlank = false;
 $wgRealnamesReplacements = array(
     'title' => TRUE,

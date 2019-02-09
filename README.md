@@ -28,7 +28,7 @@ There is currently no way to preserve User: prefixes on links or text.
 ## Download instructions
 You can download the extension directly from github [releases](https://github.com/ofbeaton/mediawiki-realnames/releases).
 
-Consult the [CHANGELOG] and [HISTORY] for version history.
+Consult the (CHANGELOG) and (HISTORY) for version history.
 
 ## Installation
 To install this extension, add the following to `LocalSettings.php`:
@@ -73,12 +73,22 @@ false | N/A | Uses same style name as $wgRealnamesLinkStyle<br>Default extension
 Do you want to show blank real names? This can make sense for _append_ style but looks silly in _reverse_. The default _false_ which shows a _standard_ link instead.
 
 Values:
-* true
-* false (default)
+* TRUE
+* FALSE (default)
 
 Output:
 * mw305 []
 * mw305
+
+#### $wgRealnamesLinkStyleBlankName [>0.6]
+The style to use on links when realname is blank, as long as `$wgRealnamesBlank === FALSE`. Default is `standard`.
+
+Same value options as described for `$wgRealnamesLinkStyle`.
+
+#### $wgRealnamesBareStyleBlankName [>0.6]
+The style to use on text when username=realname, as long as `$wgRealnamesBlank === FALSE`. Default is `standard`. 
+
+Same value options as described for `$wgRealnamesBareStyle`.
 
 #### $wgRealnamesStyles [>=0.1]
 Allows for the custom creation of style types that can then be assigned for ''link'' and ''bare'' styles. Usually to add custom text. You get 4 variables in your style:<br>
@@ -126,6 +136,16 @@ Example:
 Key | Description
 --- | ---
 `$wgRealnamesSmart['same'] = TRUE;` | same &mdash; does not replace if username=realname
+
+#### $wgRealnamesLinkStyleSameName [>0.6]
+The style to use on links when username=realname, as long as `$wgRealnamesSmart['same'] === TRUE`. Default is `standard`. 
+
+Same value options as described for `$wgRealnamesLinkStyle`.
+
+#### $wgRealnamesBareStyleSameName [>0.6]
+The style to use on text when username=realname, as long as `$wgRealnamesSmart['same'] === TRUE`. Default is `standard`. 
+
+Same value options as described for `$wgRealnamesBareStyle`.
 
 #### $wgRealnamesNamespaces [>=0.2]
 Allows you to add more namespaces for it to search for. Use this only if the article name is the username in a given namespace. Do not include the :, and keep it mind this is a regular expression string, you can use regexp modifiers, but as well may need to escape some characters.
