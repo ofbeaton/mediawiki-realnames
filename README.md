@@ -28,7 +28,7 @@ There is currently no way to preserve User: prefixes on links or text.
 ## Download instructions
 You can download the extension directly from github [releases](https://github.com/ofbeaton/mediawiki-realnames/releases).
 
-Consult the [CHANGELOG](CHANGELOG) and [HISTORY](HISTORY) for version history.
+Consult the [CHANGELOG](CHANGELOG) and [HISTORY](HISTORY) for release history.
 
 ## Installation
 To install this extension, add the following to `LocalSettings.php`:
