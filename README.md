@@ -28,7 +28,7 @@ There is currently no way to preserve User: prefixes on links or text.
 ## Download instructions
 You can download the extension directly from github [releases](https://github.com/ofbeaton/mediawiki-realnames/releases).
 
-Consult the (CHANGELOG) and (HISTORY) for version history.
+Consult the [CHANGELOG](CHANGELOG) and [HISTORY](HISTORY) for version history.
 
 ## Installation
 To install this extension, add the following to `LocalSettings.php`:
@@ -44,6 +44,8 @@ include_once("$IP/extensions/Realnames/Realnames.php");
 ```
 
 ### Configuration parameters
+See [AdvancedConfiguration.md](AdvancedConfiguration.md) for finer control, including custom styles.
+
 #### $wgRealnamesLinkStyle [>=0.1]
 Values | Example | Description
 ------ | ------- | -----------
@@ -56,109 +58,6 @@ Values | Example | Description
 "paren-append" | [mw305 (Martha Stewart)](User:mw305)
 "paren-reverse" | [Martha Stewart (mw305)](User:mw305) | Default extension behaviour
 
-#### $wgRealnamesBareStyle [>=0.1]
-Values | Example | Description
------- | ------- | -----------
-false | N/A | Uses same style name as $wgRealnamesLinkStyle<br>Default extension behaviour
-"standard" | mw305 | Provided for convenience, this is the standard MediaWiki behavior
-"replace" | Martha Stewart
-"append" | mw305 \[Martha Stewart\]
-"reverse" | Martha Stewart \[mw305\]
-"dash" | mw305 &ndash; Martha Stewart
-"dash-reverse" | Martha Stewart &ndash; mw305
-"paren-append" | mw305 (Martha Stewart)
-"paren-reverse" | Martha Stewart (mw305)
-
-#### $wgRealnamesBlank [>=0.1]
-Do you want to show blank real names? This can make sense for _append_ style but looks silly in _reverse_. The default _false_ which shows a _standard_ link instead.
-
-Values:
-* TRUE
-* FALSE (default)
-
-Output:
-* mw305 []
-* mw305
-
-#### $wgRealnamesLinkStyleBlankName [>0.6]
-The style to use on links when realname is blank, as long as `$wgRealnamesBlank === FALSE`. Default is `standard`.
-
-Same value options as described for `$wgRealnamesLinkStyle`.
-
-#### $wgRealnamesBareStyleBlankName [>0.6]
-The style to use on text when username=realname, as long as `$wgRealnamesBlank === FALSE`. Default is `false`. 
-
-Same value options as described for `$wgRealnamesBareStyle`.
-
-#### $wgRealnamesStyles [>=0.1]
-Allows for the custom creation of style types that can then be assigned for ''link'' and ''bare'' styles. Usually to add custom text. You get 4 variables in your style:<br>
-* `$1` link start<br>
-* `$2`  username<br>
-* `$3`  real name<br>
-* `$4`  link end<br>
-Ensure to use `'` quotes around your style string instead of `"` quotes, so that the `$x` do not get evaluated.
-
-Value:
-
-_array_
-
-Example:
-
-`$wgRealnamesStyles['mystyle'] = '&lt;span class="custom"&gt;$1$3$4&lt;/span&gt;';`
-
-> Note: HTML does not work in Bare style.
-
-#### $wgRealnamesReplacements [>=0.1]
-Allows you to turn off replacement in specific sections.
-
-Value:
-
-_array_
-
-Example:
-
-```php
-$wgRealnamesReplacements['title'] = TRUE;
-$wgRealnamesReplacements['subtitle'] = TRUE;
-$wgRealnamesReplacements['personnal'] = TRUE;
-$wgRealnamesReplacements['body'] = TRUE;
-```
-
-#### $wgRealnamesSmart [>=0.3]
-Allows you to turn off specific smart features
-
-Value:
-
-_array_
-
-Example:
-
-Key | Description
---- | ---
-`$wgRealnamesSmart['same'] = TRUE;` | same &mdash; does not replace if username=realname
-
-#### $wgRealnamesLinkStyleSameName [>0.6]
-The style to use on links when username=realname, as long as `$wgRealnamesSmart['same'] === TRUE`. Default is `standard`. 
-
-Same value options as described for `$wgRealnamesLinkStyle`.
-
-#### $wgRealnamesBareStyleSameName [>0.6]
-The style to use on text when username=realname, as long as `$wgRealnamesSmart['same'] === TRUE`. Default is `false`. 
-
-Same value options as described for `$wgRealnamesBareStyle`.
-
-#### $wgRealnamesNamespaces [>=0.2]
-Allows you to add more namespaces for it to search for. Use this only if the article name is the username in a given namespace. Do not include the :, and keep it mind this is a regular expression string, you can use regexp modifiers, but as well may need to escape some characters.
-
-Value:
-
-_array_
-
-Example:
-
-```php
-$wgRealnamesNamespaces[] = 'CustomUserBasedNamespace';
-```
 ### Testing
 * MediaWiki 1.32.0, 1.31.1 (LTS), 1.18.0, 1.17.1, 1.16.5, 1.15.5,
 
