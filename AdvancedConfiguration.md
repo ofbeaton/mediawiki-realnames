@@ -1,5 +1,51 @@
 Back to [README.md](README.md)...
 
+### Control
+
+#### $wgRealnamesNamespaces [>=0.2]
+Allows you to add more namespaces for it to search for. Use this only if the article name is the username in a given namespace. Do not include the :, and keep in mind this is a regular expression string, you can use regexp modifiers, but as well may need to escape some characters.
+
+Value:
+
+_array_
+
+Example:
+
+```php
+$wgRealnamesNamespaces[] = 'CustomUserBasedNamespace';
+```
+
+#### $wgRealnamesReplacements [>=0.1]
+Allows you to turn off replacement in specific sections.
+
+Value:
+
+_array_
+
+Example:
+
+```php
+$wgRealnamesReplacements['title'] = TRUE;
+$wgRealnamesReplacements['subtitle'] = TRUE;
+$wgRealnamesReplacements['personnal'] = TRUE;
+$wgRealnamesReplacements['body'] = TRUE;
+```
+
+#### $wgRealnamesSmart [>=0.3]
+Allows you to turn off specific smart features
+
+Value:
+
+_array_
+
+Example:
+
+Key | Description
+--- | ---
+`$wgRealnamesSmart['same'] = TRUE;` | same &mdash; does not replace if username=realname
+
+### Styles
+
 #### $wgRealnamesBareStyle [>=0.1]
 Values | Example | Description
 ------ | ------- | -----------
@@ -34,6 +80,16 @@ The style to use on text when username=realname, as long as `$wgRealnamesBlank =
 
 Same value options as described for `$wgRealnamesBareStyle`.
 
+#### $wgRealnamesLinkStyleSameName [>0.6]
+The style to use on links when username=realname, as long as `$wgRealnamesSmart['same'] === TRUE`. Default is `standard`. 
+
+Same value options as described for `$wgRealnamesLinkStyle`.
+
+#### $wgRealnamesBareStyleSameName [>0.6]
+The style to use on text when username=realname, as long as `$wgRealnamesSmart['same'] === TRUE`. Default is `false`. 
+
+Same value options as described for `$wgRealnamesBareStyle`.
+
 #### $wgRealnamesStyles [>=0.1]
 Allows for the custom creation of style types that can then be assigned for ''link'' and ''bare'' styles. Usually to add custom text. You get 4 variables in your style:<br>
 * `$1` link start<br>
@@ -52,55 +108,4 @@ Example:
 
 > Note: HTML does not work in Bare style.
 
-#### $wgRealnamesReplacements [>=0.1]
-Allows you to turn off replacement in specific sections.
-
-Value:
-
-_array_
-
-Example:
-
-```php
-$wgRealnamesReplacements['title'] = TRUE;
-$wgRealnamesReplacements['subtitle'] = TRUE;
-$wgRealnamesReplacements['personnal'] = TRUE;
-$wgRealnamesReplacements['body'] = TRUE;
-```
-
-#### $wgRealnamesSmart [>=0.3]
-Allows you to turn off specific smart features
-
-Value:
-
-_array_
-
-Example:
-
-Key | Description
---- | ---
-`$wgRealnamesSmart['same'] = TRUE;` | same &mdash; does not replace if username=realname
-
-#### $wgRealnamesLinkStyleSameName [>0.6]
-The style to use on links when username=realname, as long as `$wgRealnamesSmart['same'] === TRUE`. Default is `standard`. 
-
-Same value options as described for `$wgRealnamesLinkStyle`.
-
-#### $wgRealnamesBareStyleSameName [>0.6]
-The style to use on text when username=realname, as long as `$wgRealnamesSmart['same'] === TRUE`. Default is `false`. 
-
-Same value options as described for `$wgRealnamesBareStyle`.
-
-#### $wgRealnamesNamespaces [>=0.2]
-Allows you to add more namespaces for it to search for. Use this only if the article name is the username in a given namespace. Do not include the :, and keep in mind this is a regular expression string, you can use regexp modifiers, but as well may need to escape some characters.
-
-Value:
-
-_array_
-
-Example:
-
-```php
-$wgRealnamesNamespaces[] = 'CustomUserBasedNamespace';
-```
 Back to [README.md](README.md)...
