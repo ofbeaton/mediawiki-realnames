@@ -43,10 +43,10 @@ include_once("$IP/extensions/Realnames/Realnames.php");
 #add optional configuration parameters here
 ```
 
-### Configuration parameters
+## Configuration parameters
 See [AdvancedConfiguration.md](AdvancedConfiguration.md) for finer control, including custom styles.
 
-#### $wgRealnamesLinkStyle [>=0.1]
+### $wgRealnamesLinkStyle [>=0.1]
 Values | Example | Description
 ------ | ------- | -----------
 "standard" | [mw305](User:mw305) | Provided for convenience, this is the default MediaWiki behavior
@@ -58,12 +58,12 @@ Values | Example | Description
 "paren-append" | [mw305 (Martha Stewart)](User:mw305)
 "paren-reverse" | [Martha Stewart (mw305)](User:mw305) | Default extension behaviour
 
-### Testing
+## Testing
 * MediaWiki 1.32.0, 1.31.1 (LTS), 1.18.0, 1.17.1, 1.16.5, 1.15.5,
 
 ## See also
-* [Extension:LDAP_Authentication](https://www.mediawiki.org/wiki/Extension:LDAP_Authentication) popular import username/realnames from LDAP/AD
-* [Extension:Windows_NTLM_LDAP_Auto_Auth](https://www.mediawiki.org/wiki/Extension:Windows_NTLM_LDAP_Auto_Auth) import username/realnames from LDAP/AD
+* [Extension:LDAP_Authentication](https://www.mediawiki.org/wiki/Extension:LDAP_Authentication) &mdash; popular import username/realnames from LDAP/AD
+* [Extension:Windows_NTLM_LDAP_Auto_Auth](https://www.mediawiki.org/wiki/Extension:Windows_NTLM_LDAP_Auto_Auth) &mdash; import username/realnames from LDAP/AD
 
 ## Alternative extensions
 * [Extension:ShowRealUsernames](https://www.mediawiki.org/wiki/Extension:ShowRealUsernames)
