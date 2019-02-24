@@ -1,0 +1,52 @@
+<?xml version="1.0"?>
+<ruleset name="mediawiki-realnames">
+    <description>The coding standard for the mediawiki-realnames project.</description>
+
+    <!-- 
+      We support MediaWiki 1.7.0, on PHP 5.0.0 
+      https://www.mediawiki.org/wiki/Release_notes/1.7
+    -->
+
+    <rule ref="../../vendor/mediawiki/mediawiki-codesniffer/MediaWiki"/>
+    
+    
+    <!--
+         Legacy PHP Support: 5.0.0+
+    -->
+    <!-- short arrays syntax added in PHP 5.4.0, array() is proper for us -->
+    <rule ref="Generic.Arrays.DisallowLongArraySyntax.Found">
+      <severity>0</severity>    
+    </rule>
+    <!-- __DIR__ added in PHP 5.3.0, dir(___FILE___) is proper since 4.0.2 -->
+    <rule ref="MediaWiki.Usage.DirUsage.FunctionFound">
+      <severity>0</severity>    
+    </rule>
+    
+    <!--
+         Legacy MediaWiki support: 1.7.0+
+    -->
+    <!-- Extension class filename convention was `Realnames.body.php`, but classname is `ExtRealnames`. --> 
+    <rule ref="MediaWiki.Files.ClassMatchesFilename.NotMatch">
+      <severity>0</severity>    
+    </rule>
+    <rule ref="MediaWiki.Usage.DeprecatedGlobalVariables.Deprecated$wgContLang">
+      <severity>0</severity>    
+    </rule>
+    <rule ref="MediaWiki.Usage.DeprecatedGlobalVariables.Deprecated$wgTitle">
+      <severity>0</severity>    
+    </rule>
+    
+    <!--
+         MediaWiki Style is so dumb I refuse
+    -->
+    <!-- JavaDoc indentation should align on the first star, you're wrong MediaWiki -->
+    <rule ref="MediaWiki.Commenting.FunctionComment.SyntaxAlignedDocStar">
+      <severity>0</severity>    
+    </rule>
+    <rule ref="MediaWiki.Commenting.FunctionComment.SyntaxAlignedDocClose">
+      <severity>0</severity>    
+    </rule>
+    
+    
+    
+</ruleset>
