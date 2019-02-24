@@ -7,6 +7,7 @@
     <arg name="bootstrap" value="./vendor/mediawiki/mediawiki-codesniffer/utils/bootstrap-ci.php"/>
     <arg name="extensions" value="php"/>
     <arg name="encoding" value="UTF-8"/>
+    
     <config name="php_version" value="50000"/>
 
     <rule ref="phpcs/mediawiki-realnames"/>

@@ -6,8 +6,151 @@
       We support MediaWiki 1.7.0, on PHP 5.0.0 
       https://www.mediawiki.org/wiki/Release_notes/1.7
     -->
+    
+    <!--
+         Granite
+    -->
 
-    <rule ref="../../vendor/mediawiki/mediawiki-codesniffer/MediaWiki"/>
+    <!-- We do Granite first, since MediaWiki sniffs will be authorative -->
+    <rule ref="../../vendor/ofbeaton/granite/Granite" />
+    
+    <!--
+         Granite: Turn off conflicts with MediaWiki style
+    -->
+    <rule ref="PSR2.Methods.FunctionCallSignature.SpaceBeforeCloseBracket">
+      <severity>0</severity>    
+    </rule>
+    <rule ref="PSR2.Methods.FunctionCallSignature.SpaceAfterOpenBracket">
+      <severity>0</severity>    
+    </rule>
+    <rule ref="Generic.WhiteSpace.DisallowTabIndent.TabsUsed">
+      <severity>0</severity>    
+    </rule>
+    <rule ref="PSR2.ControlStructures.ControlStructureSpacing.SpacingAfterOpenBrace">
+      <severity>0</severity>    
+    </rule>
+    <rule ref="PSR2.ControlStructures.ControlStructureSpacing.SpaceBeforeCloseBrace">
+      <severity>0</severity>    
+    </rule>
+    <rule ref="Squiz.Commenting.ClosingDeclarationComment.Missing">
+      <severity>0</severity>    
+    </rule>
+    <rule ref="Squiz.Commenting.LongConditionClosingComment.Missing">
+      <severity>0</severity>    
+    </rule>
+    <rule ref="Generic.WhiteSpace.ArbitraryParenthesesSpacing.SpaceBeforeClose">
+      <severity>0</severity>    
+    </rule>
+    <rule ref="Generic.WhiteSpace.ArbitraryParenthesesSpacing.SpaceAfterOpen">
+      <severity>0</severity>    
+    </rule>
+    <rule ref="Squiz.Functions.MultiLineFunctionDeclaration.BraceOnSameLine">
+      <severity>0</severity>    
+    </rule>
+    <rule ref="Squiz.Commenting.DocCommentAlignment.SpaceBeforeStar">
+      <severity>0</severity>    
+    </rule>
+    <rule ref="Squiz.WhiteSpace.FunctionSpacing.After">
+      <severity>0</severity>    
+    </rule>
+    <rule ref="Squiz.Commenting.FunctionComment.SpacingAfterParamName">
+      <severity>0</severity>    
+    </rule>
+    <rule ref="Squiz.WhiteSpace.ScopeClosingBrace.Indent">
+      <severity>0</severity>    
+    </rule>
+    <rule ref="Generic.WhiteSpace.ScopeIndent.IncorrectExact">
+      <severity>0</severity>    
+    </rule>
+    <rule ref="Generic.WhiteSpace.ScopeIndent.Incorrect">
+      <severity>0</severity>    
+    </rule>
+    <rule ref="Squiz.ControlStructures.ForEachLoopDeclaration.SpaceBeforeClose">
+      <severity>0</severity>    
+    </rule>
+    <rule ref="Squiz.ControlStructures.ForEachLoopDeclaration.SpaceAfterOpen">
+      <severity>0</severity>    
+    </rule>
+    <rule ref="Squiz.WhiteSpace.FunctionSpacing.Before">
+      <severity>0</severity>    
+    </rule>
+    <rule ref="Squiz.Classes.ClassDeclaration.OpenBraceNewLine">
+      <severity>0</severity>    
+    </rule>
+    <rule ref="PSR1.Files.SideEffects.FoundWithSymbols">
+      <severity>0</severity>    
+    </rule>
+    <rule ref="Squiz.Commenting.FunctionComment.SpacingAfterParamType">
+      <severity>0</severity>    
+    </rule>
+    <rule ref="Squiz.Commenting.FunctionComment.ParamNameNoMatch">
+      <severity>0</severity>    
+    </rule>
+    <rule ref="Squiz.Commenting.FunctionComment.MissingParamTag">
+      <severity>0</severity>    
+    </rule>
+
+    
+    <!--
+         Granite: Even Granite is a bit weird sometimes...
+    -->
+    <!-- this is disabled in next version of Granite -->
+    <rule ref="MySource.PHP.ReturnFunctionValue.NotAssigned">
+      <severity>0</severity>    
+    </rule>
+    <rule ref="Squiz.PHP.DisallowComparisonAssignment.AssignedComparison">
+      <severity>0</severity>    
+    </rule>
+    <rule ref="Squiz.Commenting.FunctionComment.ParamCommentFullStop">
+      <severity>0</severity>    
+    </rule>
+    <rule ref="Squiz.Commenting.FunctionComment.ParamCommentNotCapital">
+      <severity>0</severity>
+    </rule>
+    <rule ref="Generic.Commenting.DocComment.ShortNotCapital">
+      <severity>0</severity>
+    </rule>
+    <rule ref="Generic.CodeAnalysis.UnusedFunctionParameter.FoundAfterLastUsed">
+        <severity>3</severity>
+    </rule>     
+    
+    <!-- just indent once for keys, otherwise you wreck linelength easily, and other indent/space rules -->
+    <rule ref="Squiz.Arrays.ArrayDeclaration.KeyNotAligned">
+      <severity>0</severity>    
+    </rule>
+    <rule ref="Squiz.Arrays.ArrayDeclaration.DoubleArrowNotAligned">
+      <severity>0</severity>    
+    </rule>
+    <rule ref="Squiz.Arrays.ArrayDeclaration.CloseBraceNotAligned">
+      <severity>0</severity>    
+    </rule>
+    <rule ref="Squiz.Arrays.ArrayDeclaration.ValueNotAligned">
+      <severity>0</severity>    
+    </rule>    
+    
+    <!--
+         Granite: Legacy PHP Support: 5.0.0+
+    -->
+    <rule ref="Squiz.Commenting.FunctionComment.TypeHintMissing">
+      <severity>0</severity>    
+    </rule>
+    
+    <!--
+         Granite: Legacy MediaWiki Support: 1.7.0+
+    -->
+    <rule ref="Squiz.Classes.ClassFileName.NoMatch">
+      <severity>0</severity>    
+    </rule>
+    <rule ref="PSR1.Classes.ClassDeclaration.MissingNamespace">
+      <severity>0</severity>    
+    </rule>      
+    
+    <!--
+         MediaWiki
+    -->
+  
+    <!-- we do MediaWiki sniffs last, as they are authorative -->
+    <rule ref="../../vendor/mediawiki/mediawiki-codesniffer/MediaWiki" />
     
     
     <!--
@@ -45,8 +188,6 @@
     </rule>
     <rule ref="MediaWiki.Commenting.FunctionComment.SyntaxAlignedDocClose">
       <severity>0</severity>    
-    </rule>
-    
-    
+    </rule>            
     
 </ruleset>
