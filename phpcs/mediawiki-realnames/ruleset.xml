@@ -12,7 +12,7 @@
     -->
 
     <!-- We do Granite first, since MediaWiki sniffs will be authorative -->
-    <rule ref="../../vendor/ofbeaton/granite/Granite" />
+    <rule ref="../../vendor/ofbeaton/granite-php/phpcs/granite" />
     
     <!--
          Granite: Turn off conflicts with MediaWiki style
@@ -93,27 +93,7 @@
     
     <!--
          Granite: Even Granite is a bit weird sometimes...
-    -->
-    <!-- this is disabled in next version of Granite -->
-    <rule ref="MySource.PHP.ReturnFunctionValue.NotAssigned">
-      <severity>0</severity>    
-    </rule>
-    <rule ref="Squiz.PHP.DisallowComparisonAssignment.AssignedComparison">
-      <severity>0</severity>    
-    </rule>
-    <rule ref="Squiz.Commenting.FunctionComment.ParamCommentFullStop">
-      <severity>0</severity>    
-    </rule>
-    <rule ref="Squiz.Commenting.FunctionComment.ParamCommentNotCapital">
-      <severity>0</severity>
-    </rule>
-    <rule ref="Generic.Commenting.DocComment.ShortNotCapital">
-      <severity>0</severity>
-    </rule>
-    <rule ref="Generic.CodeAnalysis.UnusedFunctionParameter.FoundAfterLastUsed">
-        <severity>3</severity>
-    </rule>     
-    
+    -->          
     <!-- just indent once for keys, otherwise you wreck linelength easily, and other indent/space rules -->
     <rule ref="Squiz.Arrays.ArrayDeclaration.KeyNotAligned">
       <severity>0</severity>    
