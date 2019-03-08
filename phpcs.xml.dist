@@ -9,6 +9,7 @@
     <arg name="encoding" value="UTF-8"/>
     
     <config name="php_version" value="50000"/>
+    <config name="testVersion" value="5.0"/>
 
     <rule ref="phpcs/mediawiki-realnames"/>
 </ruleset>

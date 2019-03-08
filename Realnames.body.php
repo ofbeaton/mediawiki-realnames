@@ -60,18 +60,18 @@ class ExtRealnames {
    * @see   lookForBare() for regex
    */
   protected static function checkBare( $matches ) {
-		// matches come from static::lookForBare()'s regular experession
+		// matches come from self::lookForBare()'s regular experession
 		$m = array(
 			'all' => $matches[0],
 			'username' => $matches[1],
 		);
 
-		static::debug( __METHOD__, print_r( $m, true ) );
+		self::debug( __METHOD__, print_r( $m, true ) );
 
 		// we do not currently do any checks on Bare replacements, a User: find is
 		// always valid but we could add one in the future, and the debug
 		// information is still conveniant and keeps things consistent with checkLink
-		return static::replace( $m );
+		return self::replace( $m );
   }
 
 	/**
@@ -85,7 +85,7 @@ class ExtRealnames {
    * @see   lookForBare() for regex
    */
   protected static function checkLink( $matches ) {
-		// matches come from static::lookForLinks()'s regular experession
+		// matches come from self::lookForLinks()'s regular experession
 		$m = array(
 			'all' => $matches[0],
 			'linkstart' => $matches[1],
@@ -94,7 +94,7 @@ class ExtRealnames {
 			'linkend' => $matches[4],
 		);
 
-		static::debug( __METHOD__, print_r( $m, true ) );
+		self::debug( __METHOD__, print_r( $m, true ) );
 
 		// some links point to user pages but do not display the username,
 		// we can safely ignore those
@@ -105,7 +105,7 @@ class ExtRealnames {
 			return $m['all'];
 		}
 
-		return static::replace( $m );
+		return self::replace( $m );
   }
 
 	/**
@@ -160,7 +160,7 @@ class ExtRealnames {
 
 		if ( empty( $style ) === true ) {
 			// error
-			static::debug( __METHOD__, 'error, blank style configuration' );
+			self::debug( __METHOD__, 'error, blank style configuration' );
 			return $m['all'];
 		}
 
@@ -169,7 +169,7 @@ class ExtRealnames {
 
 		if ( empty( $style ) === true ) {
 			// error
-			static::debug( __METHOD__, 'error, blank format configuration' );
+			self::debug( __METHOD__, 'error, blank format configuration' );
 			return $m['all'];
 		}
 
@@ -189,7 +189,7 @@ class ExtRealnames {
 			) {
 			// we only do this if both username and realname will be displayed in
 			// the user's format
-			static::debug( __METHOD__, 'smart dupe detected' );
+			self::debug( __METHOD__, 'smart dupe detected' );
 
 			// we're going to display: John - John
 			// this is silly. The smart thing to do
@@ -206,7 +206,7 @@ class ExtRealnames {
 			$m['linkend'],
 			) );
 
-		static::debug( __METHOD__, 'replacing with ' . print_r( $text, true ) );
+		self::debug( __METHOD__, 'replacing with ' . print_r( $text, true ) );
 
 		return $text;
   }
@@ -221,8 +221,8 @@ class ExtRealnames {
    */
   public static function getNamespacePrefixes() {
 		// if we already figured it all out, just use that again
-		if ( static::$namespacePrefixes !== false ) {
-			return static::$namespacePrefixes;
+		if ( self::$namespacePrefixes !== false ) {
+			return self::$namespacePrefixes;
 		}
 
 		// always catch this one
@@ -260,12 +260,12 @@ class ExtRealnames {
 		// clean up
 		$namespaces = array_unique( $namespaces );
 
-		static::$namespacePrefixes = '(?:(?:' . implode( '|', $namespaces ) . '):)';
+		self::$namespacePrefixes = '(?:(?:' . implode( '|', $namespaces ) . '):)';
 
-		static::debug( __METHOD__, 'namespace prefixes: ' . static::$namespacePrefixes );
+		self::debug( __METHOD__, 'namespace prefixes: ' . self::$namespacePrefixes );
 
 		// how did I forget this line before?
-		return static::$namespacePrefixes;
+		return self::$namespacePrefixes;
   }
 
 	/**
@@ -291,7 +291,7 @@ class ExtRealnames {
 
 		if ( $GLOBALS['wgRealnamesReplacements']['title'] === true ) {
 			// article title
-			static::debug( __METHOD__, 'searching article title...' );
+			self::debug( __METHOD__, 'searching article title...' );
 
 			// special user page handling
 			// User:
@@ -299,11 +299,11 @@ class ExtRealnames {
 				// swap out the specific username from title
 				// this overcomes the problem lookForBare has with spaces and underscores in names
 				$reg = '/'
-					. static::getNamespacePrefixes()
+					. self::getNamespacePrefixes()
 					. '\s*('
 					. $title->getText()
 					. ')(?:\/.+)?/';
-				$bare = static::lookForBare(
+				$bare = self::lookForBare(
 					$out->getPageTitle(),
 					$reg
 				);
@@ -311,19 +311,19 @@ class ExtRealnames {
 			}
 
 			// this should also affect the html head title
-			$out->setPageTitle( static::lookForBare( $out->getPageTitle() ) );
+			$out->setPageTitle( self::lookForBare( $out->getPageTitle() ) );
 		}
 
 		if ( $GLOBALS['wgRealnamesReplacements']['subtitle'] === true ) {
 			// subtitle (say, on revision pages)
-			static::debug( __METHOD__, 'searching article subtitle...' );
-			$out->setSubtitle( static::lookForLinks( $out->getSubtitle() ) );
+			self::debug( __METHOD__, 'searching article subtitle...' );
+			$out->setSubtitle( self::lookForLinks( $out->getSubtitle() ) );
 		}
 
 		if ( $GLOBALS['wgRealnamesReplacements']['body'] === true ) {
 			// article html text
-			static::debug( __METHOD__, 'searching article body...' );
-			$out->mBodytext = static::lookForLinks( $out->getHTML() );
+			self::debug( __METHOD__, 'searching article body...' );
+			$out->mBodytext = self::lookForLinks( $out->getHTML() );
 		}
 
 		return true;
@@ -345,7 +345,7 @@ class ExtRealnames {
    */
   public static function hookPersonalUrls( &$personal_urls, $title ) {
 		if ( $GLOBALS['wgRealnamesReplacements']['personnal'] === true ) {
-			static::debug( __METHOD__, 'searching personnal urls...' );
+			self::debug( __METHOD__, 'searching personnal urls...' );
 
 			// replace the name of the logged in user
 			if ( isset( $personal_urls['userpage'] ) === true
@@ -356,7 +356,7 @@ class ExtRealnames {
 					'username' => $personal_urls['userpage']['text'],
 					'realname' => $GLOBALS['wgUser']->getRealname(),
 					);
-				$personal_urls['userpage']['text'] = static::replace( $m );
+				$personal_urls['userpage']['text'] = self::replace( $m );
 			}
 		}
 
@@ -380,10 +380,10 @@ class ExtRealnames {
 		if ( empty( $pattern ) === true ) {
 			// considered doing [^<]+ here to catch names with spaces or underscores,
 			// which works for most titles but is not universal
-			$pattern = '/' . static::getNamespacePrefixes() . '([^ \t]+)(\/.+)?/';
+			$pattern = '/' . self::getNamespacePrefixes() . '([^ \t]+)(\/.+)?/';
 		}
 
-		static::debug( __METHOD__, 'pattern: ' . $pattern );
+		self::debug( __METHOD__, 'pattern: ' . $pattern );
 		// create_function is slow
 		$ret = preg_replace_callback(
 			$pattern,
@@ -410,9 +410,9 @@ class ExtRealnames {
 	protected static function lookForLinks( $text, $pattern = false ) {
 		if ( empty( $pattern ) === true ) {
 			$pattern = '/(<a\b[^">]+href="[^">]+'
-				. static::getNamespacePrefixes()
+				. array_map(urlencode, self::getNamespacePrefixes())
 				. '([^"\\?\\&>]+)[^>]+>(?:<bdi>)?)'
-				. static::getNamespacePrefixes()
+				. self::getNamespacePrefixes()
 				. '?([^>]+)((?:<\\/bdi>)?<\\/a>)/';
 		}
 
@@ -444,9 +444,9 @@ class ExtRealnames {
 	protected static function replace( $m ) {
 		$debug_msg = 'matched '
 			. ( ( isset( $m['username'] ) === true ) ? $m['username'] : print_r( $m, true ) );
-		static::debug( __METHOD__, $debug_msg );
+		self::debug( __METHOD__, $debug_msg );
 
-		if ( isset( static::$realnames[$m['username']] ) === false ) {
+		if ( isset( self::$realnames[$m['username']] ) === false ) {
 			// we don't have it cached
 			$realname = null;
 
@@ -458,19 +458,19 @@ class ExtRealnames {
 				$user = User::newFromName( $m['username'] );
 
 				if ( is_object( $user ) === false ) {
-					static::debug( __METHOD__, 'skipped, invalid user: ' . $m['username'] );
+					self::debug( __METHOD__, 'skipped, invalid user: ' . $m['username'] );
 					return $m['all'];
 				}
 
 				$realname = $user->getRealname();
 			}
 
-			static::$realnames[$m['username']] = htmlspecialchars( trim( $realname ) );
+			self::$realnames[$m['username']] = htmlspecialchars( trim( $realname ) );
 		}
 
 		// this may be blank
-		$m['realname'] = static::$realnames[$m['username']];
+		$m['realname'] = self::$realnames[$m['username']];
 
-		return static::display( $m );
+		return self::display( $m );
 	}
 }

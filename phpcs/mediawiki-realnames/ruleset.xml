@@ -6,13 +6,19 @@
       We support MediaWiki 1.7.0, on PHP 5.0.0 
       https://www.mediawiki.org/wiki/Release_notes/1.7
     -->
+
+    <!--
+         PHPCompatibility     
+    -->
+    <!-- errors when including this way -->
+    <!-- <rule ref="vendor/phpcompatibility/php-compatibility/PHPCompatibility" /> -->
     
     <!--
          Granite
     -->
 
     <!-- We do Granite first, since MediaWiki sniffs will be authorative -->
-    <rule ref="../../vendor/ofbeaton/granite-php/phpcs/granite" />
+    <rule ref="vendor/ofbeaton/granite-php/phpcs/granite" />
     
     <!--
          Granite: Turn off conflicts with MediaWiki style
@@ -130,7 +136,7 @@
     -->
   
     <!-- we do MediaWiki sniffs last, as they are authorative -->
-    <rule ref="../../vendor/mediawiki/mediawiki-codesniffer/MediaWiki" />
+    <rule ref="vendor/mediawiki/mediawiki-codesniffer/MediaWiki" />
     
     
     <!--

@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "38480e0017a504a143af30a02d93ac42",
+    "content-hash": "49d2b45270985d6d30c6d62a79eb8d92",
     "packages": [],
     "packages-dev": [
         {
@@ -313,17 +313,22 @@
         },
         {
             "name": "ofbeaton/granite-php",
-            "version": "4.0.2",
+            "version": "6.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/ofbeaton/granite-php.git",
-                "reference": "12bd3694ddeeaa18fc0567d41e3bd6c0b0e70e49"
+                "reference": "cbb1aca2e2e2eaa9aee48b2962f0bb99573485dc"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/ofbeaton/granite-php/zipball/12bd3694ddeeaa18fc0567d41e3bd6c0b0e70e49",
-                "reference": "12bd3694ddeeaa18fc0567d41e3bd6c0b0e70e49",
+                "url": "https://api.github.com/repos/ofbeaton/granite-php/zipball/cbb1aca2e2e2eaa9aee48b2962f0bb99573485dc",
+                "reference": "cbb1aca2e2e2eaa9aee48b2962f0bb99573485dc",
                 "shasum": ""
+            },
+            "require-dev": {
+                "jakub-onderka/php-console-highlighter": "^0.4.0",
+                "jakub-onderka/php-parallel-lint": "^1.0",
+                "squizlabs/php_codesniffer": "^3.4"
             },
             "suggest": {
                 "jakub-onderka/php-console-highlighter": "Highlight syntax for php-parallel-lint",
@@ -359,7 +364,7 @@
                 "code sniffer",
                 "lint"
             ],
-            "time": "2019-02-25T02:12:49+00:00"
+            "time": "2019-02-25T15:34:07+00:00"
         },
         {
             "name": "phpcompatibility/php-compatibility",
