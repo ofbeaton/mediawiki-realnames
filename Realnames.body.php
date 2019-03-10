@@ -44,10 +44,18 @@ class ExtRealnames {
 	/**
    * namespace regex option string.
 	 *
-	 * @var   \bool
+	 * @var   string|null
    * @since 2011-09-16, 0.2
    */
-  protected static $namespacePrefixes = false;
+	protected static $namespacePrefixes = null;
+	
+	/**
+   * namespace regex option string urlencoded.
+	 *
+	 * @var   string|null
+   * @since 2019-03-10, 0.6
+   */
+  protected static $namespacePrefixesEncoded = null;
 
 	/**
    * checks a data set to see if we should proceed with the replacement.
@@ -219,10 +227,16 @@ class ExtRealnames {
 	 *
    * @since 2011-09-22, 0.2
    */
-  public static function getNamespacePrefixes() {
+  public static function getNamespacePrefixes($encode = false) {
+		if ($encode === true) {
+			$prefixes = self::$namespacePrefixesEncoded;			
+		} else {
+			$prefixes = self::$namespacePrefixes;
+		}
+
 		// if we already figured it all out, just use that again
-		if ( self::$namespacePrefixes !== false ) {
-			return self::$namespacePrefixes;
+		if ( $prefixes !== null ) {
+			return $prefixes;
 		}
 
 		// always catch this one
@@ -260,12 +274,21 @@ class ExtRealnames {
 		// clean up
 		$namespaces = array_unique( $namespaces );
 
-		self::$namespacePrefixes = '(?:(?:' . implode( '|', $namespaces ) . '):)';
+		if ($encode === true) {
+			$namespaces = array_map('urlencode', $namespaces);
+		}
 
-		self::debug( __METHOD__, 'namespace prefixes: ' . self::$namespacePrefixes );
+		$prefixes = '(?:(?:' . implode( '|', $namespaces ) . '):)';
 
-		// how did I forget this line before?
-		return self::$namespacePrefixes;
+		self::debug( __METHOD__, 'namespace prefixes: ' . $prefixes );
+
+		if ($encode === true) {
+			self::$namespacePrefixesEncoded = $prefixes;			
+		} else {
+			self::$namespacePrefixes = $prefixes;
+		}
+
+		return $prefixes;
   }
 
 	/**
@@ -408,9 +431,11 @@ class ExtRealnames {
    * @since 2011-09-16, 0.1
    */
 	protected static function lookForLinks( $text, $pattern = false ) {
+		self::debug(__METHOD__, 'before: '.self::getNamespacePrefixes(false));
+		self::debug(__METHOD__, 'after: '.self::getNamespacePrefixes(true));
 		if ( empty( $pattern ) === true ) {
 			$pattern = '/(<a\b[^">]+href="[^">]+'
-				. array_map(urlencode, self::getNamespacePrefixes())
+				. self::getNamespacePrefixes(true)
 				. '([^"\\?\\&>]+)[^>]+>(?:<bdi>)?)'
 				. self::getNamespacePrefixes()
 				. '?([^>]+)((?:<\\/bdi>)?<\\/a>)/';
