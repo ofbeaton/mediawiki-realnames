@@ -8,7 +8,7 @@ See [HISTORY](HISTORY) for previous releases.
 **FEEDBACK NEEDED TO KEEP CONFIGS, SEE NOTE FOR 0.6.0 **
 
 bugfix:
-* fixes #12: fix support for Cyrilic language links (thanks Max Volkov)
+* fixes #12: fix support for Cyrillic language links (thanks Max Volkov)
 
 note:
 * split out advanced docs from readme.
