@@ -27,9 +27,9 @@ There is currently no way to preserve User: prefixes on links or text.
 
 ## Updates
 
-The project is considered in a usable state and feature complete. Issues are mostly possible testing or performance enhancements.
+The extension is considered in a usable state and feature complete. Issues are mostly possible testing or performance enhancements.
 
-This project is used in corporate applications. As such, the authors are unlikely to update it on a regular basis, but instead when the corporate applications that use it run into problems. You should expect updates in the 5-10yr range. 
+This extension is used in corporate applications. As such, the authors are unlikely to update it on a regular basis, but instead when the corporate applications that use it run into problems. You should expect updates in the 5-10yr range. 
 
 Issues and PRs will be monitored, and we will continue to work with the community to provide updates as they are contributed.
 
