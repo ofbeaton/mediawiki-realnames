@@ -25,6 +25,14 @@ The default configuration prioritises realnames first with the username in paren
 
 There is currently no way to preserve User: prefixes on links or text.
 
+## Updates
+
+The project is considered in a usable state and feature complete. Issues are mostly possible testing or performance enhancements.
+
+This project is used in corporate applications. As such, the authors are unlikely to update it on a regular basis, but instead when the corporate applications that use it run into problems. You should expect updates in the 5-10yr range. 
+
+Issues and PRs will be monitored, and we will continue to work with the community to provide updates as they are contributed.
+
 ## Download instructions
 You can download the extension directly from github [releases](https://github.com/ofbeaton/mediawiki-realnames/releases).
 
