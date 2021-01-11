@@ -14,40 +14,24 @@
             "name": "realnames Community",
             "homepage": "https://github.com/ofbeaton/mediawiki-realnames/graphs/contributors"
         }
-    ],    
+    ],
     "require": {
-        "php": ">=5.6.0"        
+        "php": ">=7.0"
     },
     "require-dev": {
-        "squizlabs/php_codesniffer": "^3.4",
-        "jakub-onderka/php-parallel-lint": "^1.0",
-        "jakub-onderka/php-console-highlighter": "^0.4.0",
-        "ofbeaton/granite-php": "^6.0",
-        "mediawiki/mediawiki-codesniffer": "~24.0.0",
+        "php-parallel-lint/php-parallel-lint": "1.2.0",
+        "php-parallel-lint/php-console-highlighter": "0.5.0",
+        "mediawiki/mediawiki-codesniffer": "34.0.0",
         "phpcompatibility/php-compatibility": "*",
         "roave/security-advisories": "dev-master"
     },
-    "scripts": {
-		"check": [
-            "parallel-lint . --exclude vendor",
-            "phpcs -p --standard=vendor/phpcompatibility/php-compatibility/PHPCompatibility --ignore=vendor --runtime-set testVersion 5.0- .",
-            "phpcs -p"            
-        ],
-        "fix": [
-            "phpcbf -p"
-        ],
-        "check-tests": [
-            "parallel-lint . --exclude vendor",
-            "phpcs -p --standard=vendor/ofbeaton/granite-php/phpcs/granite-tests --ignore=vendor tests"      
-        ],
-        "fix-tests": [
-            "phpcbf -p --standard=vendor/ofbeaton/granite-php/phpcs/granite-tests --ignore=vendor tests"
-        ],
-        "test": [
-            "@check"
-        ]
-	 },
-    "config": {
-        "bin-dir": "vbin"
-    }    
+	"scripts": {
+		"test": [
+			"parallel-lint . --exclude vendor",
+			"phpcs -s ."
+		],
+		"fix": [
+			"phpcbf -p"
+		]
+	}
 }

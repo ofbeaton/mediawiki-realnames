@@ -1,5 +1,7 @@
 <?php
 
+namespace MediaWiki\Extension\Realnames;
+
 /*
 	Copyright 2011-2019 Finlay Beaton. All rights reserved.
 
@@ -24,55 +26,56 @@
 	ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-if ( defined( 'MEDIAWIKI' ) === false ) {
-	die( 'This file is a MediaWiki extension, it is not a valid entry point' );
-}
+use OutputPage;
+use Skin;
+use Title;
+use User;
 
 /**
  * >= 0.1
  */
-class ExtRealnames {
+class Realnames {
 
 	/**
-   * A cache of realnames for given users.
+	 * A cache of realnames for given users.
 	 *
-	 * @var   \array
-   * @since 2011-09-16, 0.1
-   */
-	protected static $realnames = array();
+	 * @var \array
+	 * @since 2011-09-16, 0.1
+	 */
+	protected static $realnames = [];
 
 	/**
-   * namespace regex option string.
+	 * namespace regex option string.
 	 *
-	 * @var   string|null
-   * @since 2011-09-16, 0.2
-   */
+	 * @var string|null
+	 * @since 2011-09-16, 0.2
+	 */
 	protected static $namespacePrefixes = null;
-	
+
 	/**
-   * namespace regex option string urlencoded.
+	 * namespace regex option string urlencoded.
 	 *
-	 * @var   string|null
-   * @since 2019-03-10, 0.6
-   */
+	 * @var string|null
+	 * @since 2019-03-10, 0.6
+	 */
   protected static $namespacePrefixesEncoded = null;
 
 	/**
-   * checks a data set to see if we should proceed with the replacement.
+	 * checks a data set to see if we should proceed with the replacement.
 	 *
-   * @param \array $matches keyed with regex matches
+	 * @param \array $matches keyed with regex matches
 	 *
-   * @return \string text to replace the match with
+	 * @return \string text to replace the match with
 	 *
-   * @since 2011-09-16, 0.1
-   * @see   lookForBare() for regex
-   */
+	 * @since 2011-09-16, 0.1
+	 * @see   lookForBare() for regex
+	 */
   protected static function checkBare( $matches ) {
 		// matches come from self::lookForBare()'s regular experession
-		$m = array(
+		$m = [
 			'all' => $matches[0],
 			'username' => $matches[1],
-		);
+		];
 
 		self::debug( __METHOD__, print_r( $m, true ) );
 
@@ -83,24 +86,24 @@ class ExtRealnames {
   }
 
 	/**
-   * checks a data set to see if we should proceed with the replacement.
+	 * checks a data set to see if we should proceed with the replacement.
 	 *
-   * @param \array $matches keyed with regex matches
+	 * @param \array $matches keyed with regex matches
 	 *
-   * @return \string text to replace the match with
+	 * @return \string text to replace the match with
 	 *
-   * @since 2011-09-16, 0.1
-   * @see   lookForBare() for regex
-   */
+	 * @since 2011-09-16, 0.1
+	 * @see   lookForBare() for regex
+	 */
   protected static function checkLink( $matches ) {
 		// matches come from self::lookForLinks()'s regular experession
-		$m = array(
+		$m = [
 			'all' => $matches[0],
 			'linkstart' => $matches[1],
 			'linkuser' => $matches[2],
 			'username' => $matches[3],
 			'linkend' => $matches[4],
-		);
+		];
 
 		self::debug( __METHOD__, print_r( $m, true ) );
 
@@ -131,22 +134,22 @@ class ExtRealnames {
   }
 
 	/**
-   * formats the final string in the configured style to display the real name.
+	 * formats the final string in the configured style to display the real name.
 	 *
-   * @param \array $m keyed with strings called
-   *    \li<em>linkstart</em>
-   *    \li<em>username</em>
-   *    \li<em>realname</em>
-   *    \li<em>linkend</em>
+	 * @param \array $m keyed with strings called
+	 *    \li<em>linkstart</em>
+	 *    \li<em>username</em>
+	 *    \li<em>realname</em>
+	 *    \li<em>linkend</em>
 	 *
-   * @return \string formatted text to replace the match with
+	 * @return \string formatted text to replace the match with
 	 *
-   * @since 2011-09-16, 0.1
-   * @see   $wgRealnamesLinkStyle
-   * @see   $wgRealnamesBareStyle
-   * @see   $wgRealnamesStyles
-   * @see   $wgRealnamesBlank
-   */
+	 * @since 2011-09-16, 0.1
+	 * @see   $wgRealnamesLinkStyle
+	 * @see   $wgRealnamesBareStyle
+	 * @see   $wgRealnamesStyles
+	 * @see   $wgRealnamesBlank
+	 */
   protected static function display( $m ) {
 		// what kind of formatting will we do?
 		$style = $GLOBALS['wgRealnamesLinkStyle'];
@@ -207,12 +210,12 @@ class ExtRealnames {
 
 		// plug in our values to the format desired
 		// redo to ensure order
-		$text = wfMsgReplaceArgs( $format, array(
+		$text = wfMsgReplaceArgs( $format, [
 			$m['linkstart'],
 			str_replace( '_', ' ', $m['username'] ),
 			str_replace( '_', ' ', $m['realname'] ),
 			$m['linkend'],
-			) );
+			] );
 
 		self::debug( __METHOD__, 'replacing with ' . print_r( $text, true ) );
 
@@ -220,16 +223,17 @@ class ExtRealnames {
   }
 
 	/**
-   * gather list of namespace prefixes in the wiki's language.
-   * this is a regex string.
+	 * gather list of namespace prefixes in the wiki's language.
+	 * this is a regex string.
 	 *
-   * @return \string regex namespace options
+	 * @param bool $encode
+	 * @return \string regex namespace options
 	 *
-   * @since 2011-09-22, 0.2
-   */
-  public static function getNamespacePrefixes($encode = false) {
-		if ($encode === true) {
-			$prefixes = self::$namespacePrefixesEncoded;			
+	 * @since 2011-09-22, 0.2
+	 */
+  public static function getNamespacePrefixes( $encode = false ) {
+		if ( $encode === true ) {
+			$prefixes = self::$namespacePrefixesEncoded;
 		} else {
 			$prefixes = self::$namespacePrefixes;
 		}
@@ -240,11 +244,11 @@ class ExtRealnames {
 		}
 
 		// always catch this one
-		$namespaces = array(
+		$namespaces = [
 			'User',
 			'User_talk',
 			'User talk',
-		);
+		];
 
 		// add in user specified ones
 		$namespaces = array_merge( $namespaces, array_values( $GLOBALS['wgRealnamesNamespaces'] ) );
@@ -266,7 +270,7 @@ class ExtRealnames {
 		}
 
 		foreach ( $nss as $name => $space ) {
-			if ( in_array( $space, array( NS_USER, NS_USER_TALK ) ) === true ) {
+			if ( in_array( $space, [ NS_USER, NS_USER_TALK ] ) === true ) {
 				$namespaces[] = $name;
 			}
 		}
@@ -274,16 +278,16 @@ class ExtRealnames {
 		// clean up
 		$namespaces = array_unique( $namespaces );
 
-		if ($encode === true) {
-			$namespaces = array_map('urlencode', $namespaces);
+		if ( $encode === true ) {
+			$namespaces = array_map( 'urlencode', $namespaces );
 		}
 
 		$prefixes = '(?:(?:' . implode( '|', $namespaces ) . '):)';
 
 		self::debug( __METHOD__, 'namespace prefixes: ' . $prefixes );
 
-		if ($encode === true) {
-			self::$namespacePrefixesEncoded = $prefixes;			
+		if ( $encode === true ) {
+			self::$namespacePrefixesEncoded = $prefixes;
 		} else {
 			self::$namespacePrefixes = $prefixes;
 		}
@@ -292,18 +296,18 @@ class ExtRealnames {
   }
 
 	/**
-   * >= 0.1, change all usernames to realnames.
+	 * >= 0.1, change all usernames to realnames.
 	 *
-   * @param OutputPage &$out The OutputPage object.
-   * @param Skin &$skin object that will be used to generate the page, added in 1.13.
-   *
-   * @return \bool true, continue hook processing
+	 * @param OutputPage &$out The OutputPage object.
+	 * @param Skin &$skin object that will be used to generate the page, added in 1.13.
 	 *
-   * @since 2011-09-16, 0.1
-   * @note  OutputPageBeforeHTML does not work for Special pages like RecentChanges or ActiveUsers
+	 * @return \bool true, continue hook processing
+	 *
+	 * @since 2011-09-16, 0.1
+	 * @note  OutputPageBeforeHTML does not work for Special pages like RecentChanges or ActiveUsers
 	 * @note  requires MediaWiki 1.7.0
 	 * @see   hook documentation http://www.mediawiki.org/wiki/Manual:Hooks/BeforePageDisplay
-   */
+	 */
   public static function hookBeforePageDisplay( &$out, &$skin = false ) {
 		// pre 1.16 no getTitle()
 		if ( method_exists( $out, 'getTitle' ) === true ) {
@@ -318,7 +322,7 @@ class ExtRealnames {
 
 			// special user page handling
 			// User:
-			if ( in_array( $title->getNamespace(), array( NS_USER, NS_USER_TALK ) ) === true ) {
+			if ( in_array( $title->getNamespace(), [ NS_USER, NS_USER_TALK ] ) === true ) {
 				// swap out the specific username from title
 				// this overcomes the problem lookForBare has with spaces and underscores in names
 				$reg = '/'
@@ -353,15 +357,15 @@ class ExtRealnames {
   }
 
   /**
-	 * >= 0.2, change all usernames to realnames in url bar.
+   * >= 0.2, change all usernames to realnames in url bar.
    * change all usernames to realnames in skin top right links bar
-	 *
-	 * @param \array &$personal_urls the array of URLs set up so far
+   *
+   * @param \array &$personal_urls the array of URLs set up so far
    * @param Title $title the Title object of the current article
-	 *
+   *
    * @return \bool true, continue hook processing
-	 *
-	 * @since 2011-09-22, 0.2
+   *
+   * @since 2011-09-22, 0.2
    * @see   hook documentation http://www.mediawiki.org/wiki/Manual:Hooks/PersonalUrls
    * @note  requires MediaWiki 1.7.0
    * @note  does nothing for Timeless skin
@@ -374,11 +378,11 @@ class ExtRealnames {
 			if ( isset( $personal_urls['userpage'] ) === true
 				&& isset( $personal_urls['userpage']['text'] ) === true ) {
 				// fake the match, we know it's there
-				$m = array(
+				$m = [
 					'all' => $personal_urls['userpage']['text'],
 					'username' => $personal_urls['userpage']['text'],
 					'realname' => $GLOBALS['wgUser']->getRealname(),
-					);
+					];
 				$personal_urls['userpage']['text'] = self::replace( $m );
 			}
 		}
@@ -388,12 +392,12 @@ class ExtRealnames {
 
   /**
    * scan and replace plain usernames of the form User:username into real names.
-	 *
+   *
    * @param \string $text to scan
    * @param \string $pattern to match, \bool false for default
-	 *
+   *
    * @return \string with realnames replaced in
-	 *
+   *
    * @since 2011-09-16, 0.1
    * @note  bug: we have problems with users with underscores (they become spaces) or spaces,
    *    we tend to just strip the User: and leave the username, but we only modify the
@@ -410,32 +414,32 @@ class ExtRealnames {
 		// create_function is slow
 		$ret = preg_replace_callback(
 			$pattern,
-			array(
+			[
 				__CLASS__,
 				'checkBare',
-			),
+			],
 			$text
 		);
 
 		return $ret;
-	}
+  }
 
 	/**
-   * scan and replace username links into realname links.
+	 * scan and replace username links into realname links.
 	 *
-   * @param \string $text to scan
-   * @param \string $pattern to match, \bool false for default
+	 * @param \string $text to scan
+	 * @param \string $pattern to match, \bool false for default
 	 *
-   * @return \string with realnames replaced in
+	 * @return \string with realnames replaced in
 	 *
-   * @since 2011-09-16, 0.1
-   */
+	 * @since 2011-09-16, 0.1
+	 */
 	protected static function lookForLinks( $text, $pattern = false ) {
-		self::debug(__METHOD__, 'before: '.self::getNamespacePrefixes(false));
-		self::debug(__METHOD__, 'after: '.self::getNamespacePrefixes(true));
+		self::debug( __METHOD__, 'before: ' . self::getNamespacePrefixes( false ) );
+		self::debug( __METHOD__, 'after: ' . self::getNamespacePrefixes( true ) );
 		if ( empty( $pattern ) === true ) {
 			$pattern = '/(<a\b[^">]+href="[^">]+'
-				. self::getNamespacePrefixes(true)
+				. self::getNamespacePrefixes( true )
 				. '([^"\\?\\&>]+)[^>]+>(?:<bdi>)?)'
 				. self::getNamespacePrefixes()
 				. '?([^>]+)((?:<\\/bdi>)?<\\/a>)/';
@@ -444,28 +448,28 @@ class ExtRealnames {
 		// create_function is slow
 		$preg = preg_replace_callback(
 			$pattern,
-			array(
+			[
 				__CLASS__,
 				'checkLink',
-			),
+			],
 			$text
 		);
 		return $preg;
 	}
 
 	/**
-   * obtains user information based on a match for future replacement.
-   *
+	 * obtains user information based on a match for future replacement.
+	 *
 	 * @param \array $m keyed with strings called
-   *    \li<em>linkstart</em> (optional)
-   *    \li<em>username</em>
-   *    \li<em>realname</em> (optional)
-   *    \li<em>linkend</em> (optional)
+	 *    \li<em>linkstart</em> (optional)
+	 *    \li<em>username</em>
+	 *    \li<em>realname</em> (optional)
+	 *    \li<em>linkend</em> (optional)
 	 *
-   * @return \string formatted text to replace the match with
+	 * @return \string formatted text to replace the match with
 	 *
-   * @since 2011-09-16, 0.1
-   */
+	 * @since 2011-09-16, 0.1
+	 */
 	protected static function replace( $m ) {
 		$debug_msg = 'matched '
 			. ( ( isset( $m['username'] ) === true ) ? $m['username'] : print_r( $m, true ) );
