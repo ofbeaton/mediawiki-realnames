@@ -30,6 +30,7 @@ use OutputPage;
 use Skin;
 use Title;
 use User;
+use MediaWiki\MediaWikiServices;
 
 /**
  * >= 0.1
