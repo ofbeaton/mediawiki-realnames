@@ -30,6 +30,7 @@ use OutputPage;
 use Skin;
 use Title;
 use User;
+use MediaWiki\MediaWikiServices;
 
 /**
  * >= 0.1
@@ -255,8 +256,10 @@ class Realnames {
 
 		// try to figure out the wiki language
 		// ! get language from the context somehow? (2011-09-26, ofb)
-		$lang = $GLOBALS['wgContLang'];
-
+	  	// Eric Richter, 20210626, $GLOBALS['wgContLang'] is no longer available
+	  	// This solution is copied from the ReplaceText extension
+		$lang = MediaWikiServices::getInstance()->getContentLanguage();
+	  
 		// user namespace's primary name in the wiki lang
 		$namespaces[] = $lang->getNsText( NS_USER );
 		$namespaces[] = $lang->getNsText( NS_USER_TALK );
