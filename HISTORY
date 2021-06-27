@@ -4,6 +4,51 @@ This is the historical changelog for the Realnames extension.
 
 See [CHANGELOG](CHANGELOG) for the current releases.
 
+== 0.7.0 (2021-01-11) ==
+Many thanks to @samwilson for providing the PR for this release. I've not been able to test it, but given this is the only new development in years I've gone ahead and merged it.
+
+I believe it is mostly concerned with updating the coding standards and the way the extension is loaded to the latest mediawiki uses.
+
+== 0.6.2 (2019-03-11) ==
+**FEEDBACK NEEDED TO KEEP CONFIGS, SEE NOTE FOR 0.6.0 **
+
+bugfix:
+* fixes #12: fix support for Cyrillic language links (thanks Max Volkov)
+
+note:
+* split out advanced docs from readme.
+
+== 0.6.1 (2019-02-09) ==
+**FEEDBACK NEEDED TO KEEP CONFIGS, SEE NOTE FOR 0.6.0 **
+
+bugfix:
+* incremented version display
+
+== 0.6.0 (2019-02-09) ==
+**FEEDBACK NEEDED TO KEEP CONFIGS, SEE NOTE**
+
+features:
+* to keep custom styles, new configuration settings for two error states had to be added
+* When user has no realname: $wgRealnamesLinkStyleNoRealname, $wgRealnamesBareStyleNoRealname
+* when username and realname are same: $wgRealnamesLinkStyleSameName, $wgRealnamesBareStyleSameName
+
+bugfix:
+* when no realname, display standard format
+
+breaking:
+* removed support for now-archived Extension:Configure
+
+note:
+* this extension may suffer from too many options, especially as a result of supporting custom styles.
+  If you use any option other than $wgRealnamesLinkStyle, I want to hear from you! If I don't hear from
+  anyone I will assume nobody cares about the options, and I can significantly simplify the testing of the
+  extension down to just to one configuration parameter, $wgRealnamesLinkStyle and remove the rest. 
+  
+  email me ofbeaton at gmail dot com
+
+testing:
+* 1.31.1 (LTS)
+
 == 0.5.1 (2019-02-04) ==
 
 bugfix:
