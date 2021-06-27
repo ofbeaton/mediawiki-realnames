@@ -4,42 +4,9 @@ https://www.mediawiki.org/wiki/Extension:Realnames
 
 See [HISTORY](HISTORY) for previous releases.
 
-== 0.6.2 (2019-03-11) ==
-**FEEDBACK NEEDED TO KEEP CONFIGS, SEE NOTE FOR 0.6.0 **
+== 0.8.0 (2021-06-27) ==
+Many thanks to @ericrichtert for providing the PR for this release. I've not been able to test it, but was assured it was so I've gone ahead and merged it. I'll revert if we get any bug reports.
 
-bugfix:
-* fixes #12: fix support for Cyrillic language links (thanks Max Volkov)
+This is a fix for $GLOBALS['wgContLang'] no longer being available in version mediawiki 1.36
 
-note:
-* split out advanced docs from readme.
-
-== 0.6.1 (2019-02-09) ==
-**FEEDBACK NEEDED TO KEEP CONFIGS, SEE NOTE FOR 0.6.0 **
-
-bugfix:
-* incremented version display
-
-== 0.6.0 (2019-02-09) ==
-**FEEDBACK NEEDED TO KEEP CONFIGS, SEE NOTE**
-
-features:
-* to keep custom styles, new configuration settings for two error states had to be added
-* When user has no realname: $wgRealnamesLinkStyleNoRealname, $wgRealnamesBareStyleNoRealname
-* when username and realname are same: $wgRealnamesLinkStyleSameName, $wgRealnamesBareStyleSameName
-
-bugfix:
-* when no realname, display standard format
-
-breaking:
-* removed support for now-archived Extension:Configure
-
-note:
-* this extension may suffer from too many options, especially as a result of supporting custom styles.
-  If you use any option other than $wgRealnamesLinkStyle, I want to hear from you! If I don't hear from
-  anyone I will assume nobody cares about the options, and I can significantly simplify the testing of the
-  extension down to just to one configuration parameter, $wgRealnamesLinkStyle and remove the rest. 
-  
-  email me ofbeaton at gmail dot com
-
-testing:
-* 1.31.1 (LTS)
+Shoutout to @samwilson for helping review/discuss the PR.
