@@ -59,7 +59,7 @@ class Realnames {
 	 * @var string|null
 	 * @since 2019-03-10, 0.6
 	 */
-  protected static $namespacePrefixesEncoded = null;
+	protected static $namespacePrefixesEncoded = null;
 
 	/**
 	 * checks a data set to see if we should proceed with the replacement.
@@ -71,7 +71,7 @@ class Realnames {
 	 * @since 2011-09-16, 0.1
 	 * @see   lookForBare() for regex
 	 */
-  protected static function checkBare( $matches ) {
+	protected static function checkBare( $matches ) {
 		// matches come from self::lookForBare()'s regular experession
 		$m = [
 			'all' => $matches[0],
@@ -84,7 +84,7 @@ class Realnames {
 		// always valid but we could add one in the future, and the debug
 		// information is still conveniant and keeps things consistent with checkLink
 		return self::replace( $m );
-  }
+	}
 
 	/**
 	 * checks a data set to see if we should proceed with the replacement.
@@ -96,7 +96,7 @@ class Realnames {
 	 * @since 2011-09-16, 0.1
 	 * @see   lookForBare() for regex
 	 */
-  protected static function checkLink( $matches ) {
+	protected static function checkLink( $matches ) {
 		// matches come from self::lookForLinks()'s regular experession
 		$m = [
 			'all' => $matches[0],
@@ -118,7 +118,7 @@ class Realnames {
 		}
 
 		return self::replace( $m );
-  }
+	}
 
 	/**
 	 * Outputs to the debug channel.
@@ -130,9 +130,9 @@ class Realnames {
 	 *
 	 * @since 2019-01-24, 0.3.2
 	 */
-  protected static function debug( $method, $text ) {
+	protected static function debug( $method, $text ) {
 		wfDebugLog( 'realnames', $method . ': ' . $text );
-  }
+	}
 
 	/**
 	 * formats the final string in the configured style to display the real name.
@@ -151,7 +151,7 @@ class Realnames {
 	 * @see   $wgRealnamesStyles
 	 * @see   $wgRealnamesBlank
 	 */
-  protected static function display( $m ) {
+	protected static function display( $m ) {
 		// what kind of formatting will we do?
 		$style = $GLOBALS['wgRealnamesLinkStyle'];
 		$styleBlankName = $GLOBALS['wgRealnamesLinkStyleBlankName'];
@@ -221,7 +221,7 @@ class Realnames {
 		self::debug( __METHOD__, 'replacing with ' . print_r( $text, true ) );
 
 		return $text;
-  }
+	}
 
 	/**
 	 * gather list of namespace prefixes in the wiki's language.
@@ -232,7 +232,7 @@ class Realnames {
 	 *
 	 * @since 2011-09-22, 0.2
 	 */
-  public static function getNamespacePrefixes( $encode = false ) {
+	public static function getNamespacePrefixes( $encode = false ) {
 		if ( $encode === true ) {
 			$prefixes = self::$namespacePrefixesEncoded;
 		} else {
@@ -285,6 +285,15 @@ class Realnames {
 			$namespaces = array_map( 'urlencode', $namespaces );
 		}
 
+		// Escape namespaces for use in regex delimited with '/'.
+                // Shouldn't do much for most namespaces.
+		$namespaces = array_map(
+			function ($namespace) {
+				return preg_quote($namespace, '/');
+			},
+			$namespaces
+		);
+
 		$prefixes = '(?:(?:' . implode( '|', $namespaces ) . '):)';
 
 		self::debug( __METHOD__, 'namespace prefixes: ' . $prefixes );
@@ -296,7 +305,7 @@ class Realnames {
 		}
 
 		return $prefixes;
-  }
+	}
 
 	/**
 	 * >= 0.1, change all usernames to realnames.
@@ -311,7 +320,7 @@ class Realnames {
 	 * @note  requires MediaWiki 1.7.0
 	 * @see   hook documentation http://www.mediawiki.org/wiki/Manual:Hooks/BeforePageDisplay
 	 */
-  public static function hookBeforePageDisplay( &$out, &$skin = false ) {
+	public static function hookBeforePageDisplay( &$out, &$skin = false ) {
 		// pre 1.16 no getTitle()
 		if ( method_exists( $out, 'getTitle' ) === true ) {
 			$title = $out->getTitle();
@@ -331,7 +340,7 @@ class Realnames {
 				$reg = '/'
 					. self::getNamespacePrefixes()
 					. '\s*('
-					. $title->getText()
+					. preg_quote( $title->getText(), '/' )
 					. ')(?:\/.+)?/';
 				$bare = self::lookForBare(
 					$out->getPageTitle(),
@@ -357,23 +366,23 @@ class Realnames {
 		}
 
 		return true;
-  }
+	}
 
-  /**
-   * >= 0.2, change all usernames to realnames in url bar.
-   * change all usernames to realnames in skin top right links bar
-   *
-   * @param \array &$personal_urls the array of URLs set up so far
-   * @param Title $title the Title object of the current article
-   *
-   * @return \bool true, continue hook processing
-   *
-   * @since 2011-09-22, 0.2
-   * @see   hook documentation http://www.mediawiki.org/wiki/Manual:Hooks/PersonalUrls
-   * @note  requires MediaWiki 1.7.0
-   * @note  does nothing for Timeless skin
-   */
-  public static function hookPersonalUrls( &$personal_urls, $title ) {
+	/**
+	 * >= 0.2, change all usernames to realnames in url bar.
+	 * change all usernames to realnames in skin top right links bar
+	 *
+	 * @param \array &$personal_urls the array of URLs set up so far
+	 * @param Title $title the Title object of the current article
+	 *
+	 * @return \bool true, continue hook processing
+	 *
+	 * @since 2011-09-22, 0.2
+	 * @see   hook documentation http://www.mediawiki.org/wiki/Manual:Hooks/PersonalUrls
+	 * @note  requires MediaWiki 1.7.0
+	 * @note  does nothing for Timeless skin
+	 */
+	public static function hookPersonalUrls( &$personal_urls, $title ) {
 		if ( $GLOBALS['wgRealnamesReplacements']['personnal'] === true ) {
 			self::debug( __METHOD__, 'searching personnal urls...' );
 
@@ -391,22 +400,22 @@ class Realnames {
 		}
 
 		return true;
-  }
+	}
 
-  /**
-   * scan and replace plain usernames of the form User:username into real names.
-   *
-   * @param \string $text to scan
-   * @param \string $pattern to match, \bool false for default
-   *
-   * @return \string with realnames replaced in
-   *
-   * @since 2011-09-16, 0.1
-   * @note  bug: we have problems with users with underscores (they become spaces) or spaces,
-   *    we tend to just strip the User: and leave the username, but we only modify the
-   *    first word so some weird style might screw it up (2011-09-17, ofb)
-   */
-  protected static function lookForBare( $text, $pattern = false ) {
+	/**
+	 * scan and replace plain usernames of the form User:username into real names.
+	 *
+	 * @param \string $text to scan
+	 * @param \string $pattern to match, \bool false for default
+	 *
+	 * @return \string with realnames replaced in
+	 *
+	 * @since 2011-09-16, 0.1
+	 * @note  bug: we have problems with users with underscores (they become spaces) or spaces,
+	 *    we tend to just strip the User: and leave the username, but we only modify the
+	 *    first word so some weird style might screw it up (2011-09-17, ofb)
+	 */
+	protected static function lookForBare( $text, $pattern = false ) {
 		if ( empty( $pattern ) === true ) {
 			// considered doing [^<]+ here to catch names with spaces or underscores,
 			// which works for most titles but is not universal
@@ -425,7 +434,7 @@ class Realnames {
 		);
 
 		return $ret;
-  }
+	}
 
 	/**
 	 * scan and replace username links into realname links.
